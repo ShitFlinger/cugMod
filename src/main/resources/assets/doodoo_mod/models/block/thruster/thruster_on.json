@@ -1,0 +1,96 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"render_type": "cutout",
+	"texture_size": [64, 64],
+	"textures": {
+		"0": "doodoo_mod:block/thruster_on"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 16, 10],
+			"faces": {
+				"north": {"uv": [0, 4, 4, 8], "texture": "#0"},
+				"east": {"uv": [2.5, 0, 0, 4], "texture": "#0"},
+				"south": {"uv": [4, 4, 8, 8], "texture": "#0"},
+				"west": {"uv": [0, 0, 2.5, 4], "texture": "#0"},
+				"up": {"uv": [0, 4, 2.5, 0], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [2.5, 4, 0, 0], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"from": [1, 1, 10],
+			"to": [15, 15, 16],
+			"faces": {
+				"north": {"uv": [3.5, 4.25, 7, 7.75], "texture": "#missing"},
+				"east": {"uv": [4, 0.25, 2.5, 3.75], "texture": "#0"},
+				"south": {"uv": [4, 0.25, 7.5, 3.75], "texture": "#0"},
+				"west": {"uv": [2.5, 0.25, 4, 3.75], "texture": "#0"},
+				"up": {"uv": [2.5, 0.25, 4, 3.75], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [4, 0.25, 2.5, 3.75], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"from": [0.75, 0.75, 10],
+			"to": [15.25, 15.25, 16],
+			"faces": {
+				"north": {"uv": [3.5, 4.25, 7, 7.75], "texture": "#missing"},
+				"east": {"uv": [9, 0.25, 7.5, 3.75], "texture": "#0"},
+				"west": {"uv": [7.5, 0.25, 9, 3.75], "texture": "#0"},
+				"up": {"uv": [7.5, 0.25, 9, 3.75], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [9, 0.25, 7.5, 3.75], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"name": "cube inverted",
+			"from": [15, 15, 16],
+			"to": [1, 1, 10],
+			"faces": {
+				"north": {"uv": [4, 3.75, 7.5, 0.25], "texture": "#0"},
+				"east": {"uv": [2.5, 3.75, 4, 0.25], "texture": "#0"},
+				"west": {"uv": [4, 3.75, 2.5, 0.25], "texture": "#0"},
+				"up": {"uv": [4, 3.75, 2.5, 0.25], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [2.5, 3.75, 4, 0.25], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"name": "cube inverted",
+			"from": [14, 14, 32],
+			"to": [2, 2, 10],
+			"shade": false,
+			"light_emission": 10,
+			"rotation": {"angle": 0, "axis": "y", "origin": [2, 2, 10]},
+			"faces": {
+				"north": {"uv": [4, 3.25, 7, 0.25], "texture": "#0"},
+				"east": {"uv": [0, 11, 5.5, 8], "texture": "#0"},
+				"south": {"uv": [4.25, 3.25, 7.25, 0.25], "texture": "#0"},
+				"west": {"uv": [5.5, 11, 0, 8], "texture": "#0"},
+				"up": {"uv": [5.5, 11, 0, 8], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [0, 11, 5.5, 8], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"name": "cube inverted",
+			"from": [11, 11, 32],
+			"to": [5, 5, 10],
+			"shade": false,
+			"light_emission": 10,
+			"rotation": {"angle": 0, "axis": "y", "origin": [2, 2, 10]},
+			"faces": {
+				"north": {"uv": [4, 3.25, 7, 0.25], "texture": "#0"},
+				"east": {"uv": [0, 11, 5.5, 9.75], "texture": "#0"},
+				"south": {"uv": [4.25, 3.25, 7.25, 0.25], "texture": "#0"},
+				"west": {"uv": [5.5, 11, 0, 9.75], "texture": "#0"},
+				"up": {"uv": [5.5, 11, 0, 9.75], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [0, 11, 5.5, 9.75], "rotation": 90, "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"gui": {
+			"rotation": [30, -135, 0],
+			"scale": [0.625, 0.625, 0.625]
+		}
+	}
+}
