@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "facing=north": { "model": "cugmod:block/control/wing/control_surface" },
+    "facing=south": { "model": "cugmod:block/control/wing/control_surface", "y": 180 },
+    "facing=east":  { "model": "cugmod:block/control/wing/control_surface", "y": 90 },
+    "facing=west":  { "model": "cugmod:block/control/wing/control_surface", "y": 270 },
+    "facing=up":   { "model": "cugmod:block/control/wing/control_surface", "x": -90 },
+    "facing=down":  { "model": "cugmod:block/control/wing/control_surface", "x": 90, "y": 90 }
+  }
+}

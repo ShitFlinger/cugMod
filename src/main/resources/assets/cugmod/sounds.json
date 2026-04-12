@@ -1,0 +1,25 @@
+{
+  "thruster": {
+    "sounds": ["cugmod:thruster"]
+  },
+
+  "swine_break": {
+    "sounds": ["cugmod:swine_break"]
+  },
+
+  "swine_step": {
+    "sounds": ["cugmod:swine_step"]
+  },
+
+  "swine_place": {
+    "sounds": ["cugmod:swine_place"]
+  },
+
+  "swine_hit": {
+    "sounds": ["cugmod:swine_hit"]
+  },
+
+  "swine_fall": {
+    "sounds": ["cugmod:swine_fall"]
+  }
+}

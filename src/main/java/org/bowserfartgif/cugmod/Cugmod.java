@@ -24,6 +24,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.bowserfartgif.cugmod.registry.DoodooBlocks;
 import org.bowserfartgif.cugmod.registry.DoodooBlockEntities;
+import org.bowserfartgif.cugmod.registry.DoodooSounds;
 import org.slf4j.Logger;
 import net.minecraft.world.item.ItemStack;
 
@@ -39,10 +40,11 @@ public class Cugmod {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB =
             CREATIVE_MODE_TABS.register("cugmod", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.cugmod"))
-                    .withTabsBefore(CreativeModeTabs.COMBAT)
                     .icon(() -> new ItemStack(DoodooBlocks.THRUSTER.get()))
                     .displayItems((parameters, output) -> {
                         output.accept(DoodooBlocks.THRUSTER.get().asItem());
+                        output.accept(DoodooBlocks.WING.get().asItem());
+                        output.accept(DoodooBlocks.CONTROL_SURFACE.get().asItem());
                     })
                     .build());
 
@@ -50,6 +52,7 @@ public class Cugmod {
 
         modEventBus.addListener(this::commonSetup);
         BLOCKS.register(modEventBus);
+        DoodooSounds.SOUND_EVENTS.register(modEventBus);
         DoodooBlocks.registerBlockItems(ITEMS);
         DoodooBlocks.BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
@@ -61,11 +64,7 @@ public class Cugmod {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        if (Config.logDirtBlock) LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT));
 
-        LOGGER.info(Config.magicNumberIntroduction + Config.magicNumber);
-
-        Config.items.forEach((item) -> LOGGER.info("ITEM >> {}", item.toString()));
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {

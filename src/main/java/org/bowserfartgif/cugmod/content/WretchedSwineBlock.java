@@ -1,4 +1,4 @@
-package org.bowserfartgif.cugmod.content.propulsion;
+package org.bowserfartgif.cugmod.content;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,21 +16,18 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.FluidState;
 import org.jetbrains.annotations.Nullable;
 
-public class ThrusterBlock extends Block implements EntityBlock {
+public class WretchedSwineBlock extends Block {
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
 
-    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-
-
-    public ThrusterBlock(Properties properties) {
-        super(properties);
+    public WretchedSwineBlock(Properties props) {
+        super(props);
         this.registerDefaultState(this.stateDefinition.any()
-                .setValue(FACING, Direction.NORTH)
-                .setValue(POWERED, false));
+                .setValue(FACING, Direction.NORTH));
     }
 
-   //blehh shift makes the thruster place da other way
+
+    //shift ameks place directionr eversed, i guess ill keep this
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context){
         Direction normal = context.getNearestLookingDirection();
@@ -42,33 +39,9 @@ public class ThrusterBlock extends Block implements EntityBlock {
     }
 
 
-
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, POWERED);
+        builder.add(FACING);
     }
 
-    // fuck my chud life dude god damn it i had to ADD THIS. IM SO FUCKING Intelligent! DUDE. FUCK.
-    @Nullable
-    @Override
-    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new ThrusterBlockEntity(blockPos, blockState);
-    }
-
-    @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
-        return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
-    }
-
-
-
-    @Override
-    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
-        if (!level.isClientSide) {
-            boolean shouldBePowered = level.hasNeighborSignal(pos);
-            if (state.getValue(POWERED) != shouldBePowered) {
-                level.setBlock(pos, state.setValue(POWERED, shouldBePowered), Block.UPDATE_CLIENTS);
-            }
-        }
-    }
 }

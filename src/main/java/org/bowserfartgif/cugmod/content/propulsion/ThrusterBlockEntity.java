@@ -2,6 +2,8 @@ package org.bowserfartgif.cugmod.content.propulsion;
 
 import dev.ryanhcode.sable.api.block.BlockEntitySubLevelActor;
 import dev.ryanhcode.sable.api.block.BlockSubLevelAssemblyListener;
+import dev.ryanhcode.sable.api.block.propeller.BlockEntityPropeller;
+import dev.ryanhcode.sable.api.block.propeller.BlockEntitySubLevelPropellerActor;
 import dev.ryanhcode.sable.api.physics.force.ForceGroups;
 import dev.ryanhcode.sable.api.physics.force.QueuedForceGroup;
 import dev.ryanhcode.sable.api.physics.handle.RigidBodyHandle;
@@ -10,46 +12,60 @@ import dev.ryanhcode.sable.sublevel.ServerSubLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.bowserfartgif.cugmod.Config;
 import org.bowserfartgif.cugmod.registry.DoodooBlockEntities;
 import org.joml.Vector3d;
 
 public class ThrusterBlockEntity extends BlockEntity
-        implements BlockEntitySubLevelActor, BlockSubLevelAssemblyListener {
+        implements BlockEntitySubLevelPropellerActor, BlockSubLevelAssemblyListener, BlockEntityPropeller {
 
-    public static final double DEFAULT_THRUST = 150.0;
+    Direction facing = getBlockState().getValue(ThrusterBlock.FACING);
 
-    private double thrust = DEFAULT_THRUST;
+    private double thrust = 50;
+
+    private double airflow = 200;
+
+    @Override
+    public BlockEntityPropeller getPropeller() {
+        return this;
+    }
 
     public ThrusterBlockEntity(BlockPos pos, BlockState state) {
         super(DoodooBlockEntities.THRUSTER.get(), pos, state);
     }
 
-
+    @Override
+    public Direction getBlockDirection() {
+        return facing.getOpposite();
+    }
 
     @Override
-    public void sable$physicsTick(ServerSubLevel subLevel, RigidBodyHandle handle, double timeStep) {
+    public double getAirflow() {
+        return airflow * Config.airflowMultiplier;
+    }
+
+    @Override
+    public double getThrust() {
+        return thrust * Config.thrustMultiplier;
+    }
+
+    @Override
+    public boolean isActive() {
+       return getJetPower() > 0.01f;
+    }
+
+
+
+    double getJetPower()
+    {
         int redstoneLevel = 0;
         if (level != null) {
             redstoneLevel = level.getBestNeighborSignal(getBlockPos());
         }
-
-        double finalThrust = thrust * (redstoneLevel / 15.0);
-
-        Direction facing = getBlockState().getValue(ThrusterBlock.FACING);
-
-        Vector3d normal = JOMLConversion.atLowerCornerOf(facing.getNormal());
-
-        Vector3d force = new Vector3d(normal)
-                .mul(finalThrust * timeStep);
-
-        QueuedForceGroup forceGroup = subLevel.getOrCreateQueuedForceGroup(ForceGroups.PROPULSION.get());
-
-        forceGroup.applyAndRecordPointForce(
-                JOMLConversion.atCenterOf(getBlockPos()),
-                force
-        );
+        return redstoneLevel * thrust;
     }
 
     @Override

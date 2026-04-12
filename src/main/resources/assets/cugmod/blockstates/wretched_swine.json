@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=north": { "model": "cugmod:block/wretched_swine" },
+		"facing=south": { "model": "cugmod:block/wretched_swine", "y": 180 },
+		"facing=east":  { "model": "cugmod:block/wretched_swine", "y": 90 },
+		"facing=west":  { "model": "cugmod:block/wretched_swine", "y": 270 },
+		"facing=up":    { "model": "cugmod:block/wretched_swine", "x": -90 },
+		"facing=down":  { "model": "cugmod:block/wretched_swine", "x": 90 }
+	}
+}
