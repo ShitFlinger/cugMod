@@ -23,4 +23,12 @@ public class ControlSurfaceBlockEntity extends BlockEntity {
         return mult * (redstoneLevelAbove + redstoneLevelBelow);
     }
 
+    public float angle;
+    public float prevAngle;
+
+    public void tick(){
+        prevAngle = angle;
+        angle = -getControlSurfaceAngle() * 1.5f;
+    }
+
 }
