@@ -24,6 +24,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.bowserfartgif.cugmod.registry.DoodooBlocks;
 import org.bowserfartgif.cugmod.registry.DoodooBlockEntities;
+import org.bowserfartgif.cugmod.registry.DoodooPartialModels;
 import org.bowserfartgif.cugmod.registry.DoodooSounds;
 import org.slf4j.Logger;
 import net.minecraft.world.item.ItemStack;
@@ -36,7 +37,6 @@ public class Cugmod {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
-
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB =
             CREATIVE_MODE_TABS.register("cugmod", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.cugmod"))
@@ -81,8 +81,9 @@ public class Cugmod {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             // Some client setup code
-            LOGGER.info("HELLO FROM CLIENT SETUP");
+            LOGGER.info("HEEELLLPPPPP HELP ME HEELLPPPP PLEASEEEE - I Am Kipti Discord");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+            DoodooPartialModels.bootstrap();
         }
     }
 }

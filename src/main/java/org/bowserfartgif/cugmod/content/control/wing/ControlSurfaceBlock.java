@@ -9,13 +9,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -30,7 +30,6 @@ import java.util.Optional;
 public class ControlSurfaceBlock extends Block implements EntityBlock, BlockSubLevelLiftProvider {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final BooleanProperty IS_ELEVATOR = BooleanProperty.create("is_elevator");
     private static final VoxelShape SHAPE_Z = Block.box(0, 5, 0, 16, 11, 16);
     public ControlSurfaceBlock(Properties properties) {
         super(properties);
@@ -38,8 +37,6 @@ public class ControlSurfaceBlock extends Block implements EntityBlock, BlockSubL
                 .setValue(FACING, Direction.NORTH)
         );
     }
-
-
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
@@ -49,6 +46,26 @@ public class ControlSurfaceBlock extends Block implements EntityBlock, BlockSubL
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE_Z;
+    }
+
+    //propogate da signal bro ..
+    @Override
+    protected int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        if(level instanceof Level l)
+        {
+            int best = 0;
+            for (Direction dir : Direction.values()) {
+                if (dir == direction) continue;
+                BlockPos neighborPos = pos.relative(dir);
+                // skip if neighbor is also this block to avoid loop
+                //^ hey so claude how the Freak is this possible??
+                //i mean it works
+                if (l.getBlockState(neighborPos).getBlock() == this) continue;
+                best = Math.max(best, l.getSignal(neighborPos, dir));
+            }
+            return best;
+        }
+        return 0;
     }
 
     @Override

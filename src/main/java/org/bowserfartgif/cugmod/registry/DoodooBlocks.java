@@ -1,28 +1,19 @@
 package org.bowserfartgif.cugmod.registry;
 
-import com.ibm.icu.text.RelativeDateTimeFormatter;
-import com.mojang.serialization.MapCodec;
-import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.bowserfartgif.cugmod.Cugmod;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.bowserfartgif.cugmod.content.WretchedSwineBlock;
+import org.bowserfartgif.cugmod.content.control.joints.HingeBlock;
 import org.bowserfartgif.cugmod.content.control.wing.ControlSurfaceBlock;
-import org.bowserfartgif.cugmod.content.control.wing.ControlSurfaceControllerCoreBlock;
 import org.bowserfartgif.cugmod.content.control.wing.WingBlock;
-import org.bowserfartgif.cugmod.content.control.wing.WingBlockEntity;
 import org.bowserfartgif.cugmod.content.propulsion.ThrusterBlock;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.DirectionalBlock;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+
 public class DoodooBlocks {
 
 
@@ -71,17 +62,16 @@ public class DoodooBlocks {
                     )
             );
 
-    public static final DeferredHolder<Block, ControlSurfaceControllerCoreBlock> CONTROL_SURFACE_CONTROLLER_BLOCK =
-            BLOCKS.register("control_surface_controller",
-                    () -> new ControlSurfaceControllerCoreBlock(BlockBehaviour.Properties.of()
+
+    public static final DeferredHolder<Block, HingeBlock> HINGE =
+            BLOCKS.register("hinge",
+                    () -> new HingeBlock(BlockBehaviour.Properties.of()
                             .noOcclusion()
                             .strength(0.2f)
                             .requiresCorrectToolForDrops()
                             .sound(SoundType.COPPER)
                     )
             );
-
-
 
  public static void registerBlockItems(DeferredRegister.Items itemRegistry){
      BLOCKS.getEntries().forEach(block -> {

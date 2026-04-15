@@ -14,8 +14,13 @@ public class ControlSurfaceBlockEntity extends BlockEntity {
 
     public float getControlSurfaceAngle() {
         if (level == null) return 0f;
-        int redstoneLevel = level.getBestNeighborSignal(getBlockPos());
+        int redstoneLevelAbove = level.getBestNeighborSignal(getBlockPos().above());
+        int redstoneLevelBelow = level.getBestNeighborSignal(getBlockPos().below()) * -1;
+
+
+
         float mult = -1f;
-        return redstoneLevel * mult;
+        return mult * (redstoneLevelAbove + redstoneLevelBelow);
     }
+
 }
