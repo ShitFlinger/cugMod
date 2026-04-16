@@ -59,11 +59,7 @@ public class ControlSurfaceRenderer implements BlockEntityRenderer<ControlSurfac
         poseStack.pushPose();
 
 
-        float targetAngle = -be.getControlSurfaceAngle() * 1.5f;
-
-
-        //lets just duct tape over that lerp for now
-        float angle = Mth.lerp(partialTick, targetAngle, targetAngle);
+        float angle = -be.getEffectiveAngle() * 1.5f;
 
 
 

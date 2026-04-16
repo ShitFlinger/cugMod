@@ -1,6 +1,5 @@
 package org.bowserfartgif.cugmod.content.control.wing;
 
-import com.sun.jna.platform.win32.WinBase;
 import dev.ryanhcode.sable.api.block.BlockSubLevelLiftProvider;
 import dev.ryanhcode.sable.companion.math.Pose3d;
 import dev.ryanhcode.sable.physics.config.dimension_physics.DimensionPhysicsData;
@@ -31,6 +30,7 @@ public class ControlSurfaceBlock extends Block implements EntityBlock, BlockSubL
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     private static final VoxelShape SHAPE_Z = Block.box(0, 5, 0, 16, 11, 16);
+
     public ControlSurfaceBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any()
@@ -48,29 +48,38 @@ public class ControlSurfaceBlock extends Block implements EntityBlock, BlockSubL
         return SHAPE_Z;
     }
 
-    //propogate da signal bro ..
-    @Override
-    protected int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
-        if(level instanceof Level l)
-        {
-            int best = 0;
-            for (Direction dir : Direction.values()) {
-                if (dir == direction) continue;
-                BlockPos neighborPos = pos.relative(dir);
-                // skip if neighbor is also this block to avoid loop
-                //^ hey so claude how the Freak is this possible??
-                //i mean it works
-                if (l.getBlockState(neighborPos).getBlock() == this) continue;
-                best = Math.max(best, l.getSignal(neighborPos, dir));
-            }
-            return best;
-        }
-        return 0;
-    }
-
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, Level level, BlockPos pos,
+                                Block block, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, level, pos, block, fromPos, isMoving);
+
+        if (!(level.getBlockEntity(pos) instanceof ControlSurfaceBlockEntity be)) return;
+
+        float power = be.getControlSurfaceAngle();
+
+        // Always clear the network first
+        clearReceivedAngles(level, pos, 16);
+
+        // Always propagate, even if 0
+        be.startPropagation();
+    }
+
+    private void clearReceivedAngles(Level level, BlockPos origin, int depth) {
+        if (depth <= 0) return;
+        for (Direction dir : Direction.values()) {
+            BlockPos neighborPos = origin.relative(dir);
+            if (level.getBlockEntity(neighborPos) instanceof ControlSurfaceBlockEntity neighbor) {
+                if (neighbor.receivedAngle != 0) {
+                    neighbor.receivedAngle = 0f;
+                    clearReceivedAngles(level, neighborPos, depth - 1);
+                }
+            }
+        }
     }
 
     @Override
@@ -88,7 +97,6 @@ public class ControlSurfaceBlock extends Block implements EntityBlock, BlockSubL
         return blockState.getValue(FACING);
     }
 
-    //the override of death and despair
     @Override
     public void sable$contributeLiftAndDrag(LiftProviderContext ctx, ServerSubLevel subLevel, @NotNull Pose3d localPose, double timeStep, Vector3dc linearVelocity, Vector3dc angularVelocity, Vector3d linearImpulse, Vector3d angularImpulse, @Nullable LiftProviderGroup group) {
         BlockSubLevelLiftProvider.resetVectors();
@@ -98,7 +106,7 @@ public class ControlSurfaceBlock extends Block implements EntityBlock, BlockSubL
 
         Optional<ControlSurfaceBlockEntity> blockEntity = subLevel.getLevel().getBlockEntity(ctx.pos(), DoodooBlockEntities.CONTROL_SURFACE.get());
         blockEntity.ifPresent(be -> {
-            float angle = be.getControlSurfaceAngle();
+            float angle = be.getEffectiveAngle();
             switch (facing) {
                 case WEST  -> { LIFT_NORMAL.rotateZ(Math.PI / 2); LIFT_NORMAL.rotateZ(-angle); }
                 case EAST  -> { LIFT_NORMAL.rotateZ(Math.PI / 2); LIFT_NORMAL.rotateZ(angle);  }
