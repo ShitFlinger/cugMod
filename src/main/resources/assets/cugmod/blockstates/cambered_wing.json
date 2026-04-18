@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "facing=north": { "model": "cugmod:block/control/wing/cambered_wing" },
+    "facing=south": { "model": "cugmod:block/control/wing/cambered_wing", "y": 180 },
+    "facing=east":  { "model": "cugmod:block/control/wing/cambered_wing", "y": 90 },
+    "facing=west":  { "model": "cugmod:block/control/wing/cambered_wing", "y": 270 },
+    "facing=up":    { "model": "cugmod:block/control/wing/cambered_wing", "x": -90 },
+    "facing=down":  { "model": "cugmod:block/control/wing/cambered_wing", "x": 90 }
+  }
+}

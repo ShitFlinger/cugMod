@@ -1,23 +1,17 @@
     package org.bowserfartgif.cugmod.content.propulsion;
 
-    import dev.ryanhcode.sable.api.block.BlockEntitySubLevelActor;
     import dev.ryanhcode.sable.api.block.BlockSubLevelAssemblyListener;
     import dev.ryanhcode.sable.api.block.propeller.BlockEntityPropeller;
     import dev.ryanhcode.sable.api.block.propeller.BlockEntitySubLevelPropellerActor;
-    import dev.ryanhcode.sable.api.physics.force.ForceGroups;
-    import dev.ryanhcode.sable.api.physics.force.QueuedForceGroup;
-    import dev.ryanhcode.sable.api.physics.handle.RigidBodyHandle;
-    import dev.ryanhcode.sable.companion.math.JOMLConversion;
-    import dev.ryanhcode.sable.sublevel.ServerSubLevel;
     import net.minecraft.core.BlockPos;
     import net.minecraft.core.Direction;
+    import net.minecraft.core.particles.ParticleTypes;
     import net.minecraft.server.level.ServerLevel;
-    import net.minecraft.world.level.block.Block;
+    import net.minecraft.world.level.Level;
     import net.minecraft.world.level.block.entity.BlockEntity;
     import net.minecraft.world.level.block.state.BlockState;
     import org.bowserfartgif.cugmod.Config;
     import org.bowserfartgif.cugmod.registry.DoodooBlockEntities;
-    import org.joml.Vector3d;
 
     public class ThrusterBlockEntity extends BlockEntity
             implements BlockEntitySubLevelPropellerActor, BlockSubLevelAssemblyListener, BlockEntityPropeller {
@@ -55,6 +49,28 @@
         @Override
         public boolean isActive() {
            return getJetPower() > 0.01f;
+        }
+
+
+
+
+
+        public Direction getFacing() {
+            return facing;
+        }
+
+        public static void tick(Level level, BlockPos pos, BlockState state, ThrusterBlockEntity be) {
+            Direction dir = state.getValue(ThrusterBlock.FACING).getOpposite();
+            float particleSpeed = 1f;
+            if (level.isClientSide && state.getValue(ThrusterBlock.POWERED)) {
+                level.addParticle(
+                        ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, // particle type
+                        pos.getX() + 0.5 + dir.getStepX(),
+                        pos.getY() + 0.5 + dir.getStepY(),
+                        pos.getZ() + 0.5 + dir.getStepZ(),
+                        dir.getStepX() * particleSpeed, dir.getStepY() * particleSpeed, dir.getStepZ() * particleSpeed// motion
+                );
+            }
         }
 
 

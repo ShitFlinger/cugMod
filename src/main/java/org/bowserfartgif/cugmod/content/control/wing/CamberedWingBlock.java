@@ -17,7 +17,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class WingBlock extends Block implements BlockSubLevelLiftProvider {
+public class CamberedWingBlock extends Block implements BlockSubLevelLiftProvider {
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
 
@@ -48,7 +48,7 @@ public class WingBlock extends Block implements BlockSubLevelLiftProvider {
         }
     }
 
-    public WingBlock(Properties properties){
+    public CamberedWingBlock(Properties properties){
         super(properties);
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.NORTH)
@@ -57,7 +57,7 @@ public class WingBlock extends Block implements BlockSubLevelLiftProvider {
 
     @Override
     public float sable$getLiftScalar() {
-        return 0.0f;
+        return 0.6f;
     }
 
     @Override

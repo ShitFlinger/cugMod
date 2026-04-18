@@ -44,6 +44,7 @@ public class Cugmod {
                     .displayItems((parameters, output) -> {
                         output.accept(DoodooBlocks.THRUSTER.get().asItem());
                         output.accept(DoodooBlocks.WING.get().asItem());
+                        output.accept(DoodooBlocks.CAMBERED_WING.get().asItem());
                         output.accept(DoodooBlocks.CONTROL_SURFACE.get().asItem());
                     })
                     .build());

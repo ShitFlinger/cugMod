@@ -7,6 +7,8 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -14,6 +16,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.FluidState;
+import org.bowserfartgif.cugmod.registry.DoodooBlockEntities;
 import org.jetbrains.annotations.Nullable;
 
 public class ThrusterBlock extends Block implements EntityBlock {
@@ -41,7 +44,14 @@ public class ThrusterBlock extends Block implements EntityBlock {
                 .setValue(FACING, normal);
     }
 
-
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return level.isClientSide ? (lvl, pos, st, be) -> {
+            if (be instanceof ThrusterBlockEntity thruster) {
+                ThrusterBlockEntity.tick(lvl, pos, st, thruster);
+            }
+        } : null;
+    }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

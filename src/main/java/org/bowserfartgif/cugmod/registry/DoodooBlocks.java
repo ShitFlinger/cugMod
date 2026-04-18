@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.bowserfartgif.cugmod.content.WretchedSwineBlock;
 import org.bowserfartgif.cugmod.content.control.joints.HingeBlock;
+import org.bowserfartgif.cugmod.content.control.wing.CamberedWingBlock;
 import org.bowserfartgif.cugmod.content.control.wing.ControlSurfaceBlock;
 import org.bowserfartgif.cugmod.content.control.wing.WingBlock;
 import org.bowserfartgif.cugmod.content.propulsion.ThrusterBlock;
@@ -42,6 +43,18 @@ public class DoodooBlocks {
                     )
             );
 
+    public static final DeferredHolder<Block, CamberedWingBlock> CAMBERED_WING =
+            BLOCKS.register("cambered_wing",
+                    () -> new CamberedWingBlock(BlockBehaviour.Properties.of()
+                            .noOcclusion()
+                            .strength(0.2f)
+                            .requiresCorrectToolForDrops()
+                            .sound(SoundType.COPPER)
+                    )
+            );
+
+
+
     public static final DeferredHolder<Block, ControlSurfaceBlock> CONTROL_SURFACE =
             BLOCKS.register("control_surface",
                     () -> new ControlSurfaceBlock(BlockBehaviour.Properties.of()
@@ -72,6 +85,8 @@ public class DoodooBlocks {
                             .sound(SoundType.COPPER)
                     )
             );
+
+
 
  public static void registerBlockItems(DeferredRegister.Items itemRegistry){
      BLOCKS.getEntries().forEach(block -> {
