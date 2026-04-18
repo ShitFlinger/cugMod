@@ -104,23 +104,21 @@ repositories {
 
 dependencies {
     def veil = "foundry.veil:veil-neoforge-${minecraft_version}:${veil_version}"
-    jarJar(veil)
+    compileOnly(veil)
     implementation(veil) {
         exclude group: 'maven.modrinth'
         exclude group: 'me.fallenbreath'
     }
 
     def flywheelApi = "dev.engine-room.flywheel:flywheel-neoforge-api-${minecraft_version}:${flywheel_version}"
-    jarJar(flywheelApi)
-    api(flywheelApi)
+    compileOnly(flywheelApi)
 
     def flywheel = "dev.engine-room.flywheel:flywheel-neoforge-${minecraft_version}:${flywheel_version}"
-    jarJar(flywheel)
-    implementation(flywheel)
+    compileOnly(flywheel)
 
-   implementation("dev.ryanhcode.sable:sable-neoforge-${minecraft_version}:${sable_version}") {
-       exclude group: 'foundry.veil'
-   }
+    implementation("dev.ryanhcode.sable:sable-neoforge-${minecraft_version}:${sable_version}") {
+        exclude group: 'foundry.veil'
+    }
    api("dev.ryanhcode.sable-companion:sable-companion-common-${minecraft_version}:${sable_companion_version}")
 
     localRuntime("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")

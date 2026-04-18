@@ -18,9 +18,9 @@ import java.util.stream.Collectors;
 public class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
-    private static final ModConfigSpec.IntValue JET_THRUST_MULTIPLIER = BUILDER.comment("Jet Thruster Thrust Multiplier").defineInRange("thrustMult", 1, 0, Integer.MAX_VALUE);
+    private static final ModConfigSpec.IntValue JET_THRUST_MULTIPLIER = BUILDER.comment("Jet Thruster Thrust Multiplier").defineInRange("thrustMult", 5, 0, Integer.MAX_VALUE);
 
-    private static final ModConfigSpec.IntValue JET_AIRFLOW_MULTIPLIER = BUILDER.comment("Jet Thruster Airflow Multiplier").defineInRange("airflowMult", 1, 0, Integer.MAX_VALUE);
+    private static final ModConfigSpec.IntValue JET_AIRFLOW_MULTIPLIER = BUILDER.comment("Jet Thruster Airflow Multiplier").defineInRange("airflowMult", 5, 0, Integer.MAX_VALUE);
 
     static final ModConfigSpec SPEC = BUILDER.build();
     public static double thrustMultiplier;
