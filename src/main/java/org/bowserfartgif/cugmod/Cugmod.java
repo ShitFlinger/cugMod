@@ -2,6 +2,8 @@ package org.bowserfartgif.cugmod;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -85,6 +87,12 @@ public class Cugmod {
             LOGGER.info("HEEELLLPPPPP HELP ME HEELLPPPP PLEASEEEE - I Am Kipti Discord");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
             DoodooPartialModels.bootstrap();
+            
+            registerBlockRenderLayers();
+        }
+        
+        private static void registerBlockRenderLayers() {
+            ItemBlockRenderTypes.setRenderLayer(DoodooBlocks.SWINE.get(), RenderType.cutout());
         }
     }
 }

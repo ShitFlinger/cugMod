@@ -9,6 +9,7 @@ import org.bowserfartgif.cugmod.Cugmod;
 import org.bowserfartgif.cugmod.content.control.joints.HingeBlockEntity;
 import org.bowserfartgif.cugmod.content.control.wing.ControlSurfaceBlockEntity;
 import org.bowserfartgif.cugmod.content.propulsion.ThrusterBlockEntity;
+import org.bowserfartgif.cugmod.content.swine.WretchedSwineBlockEntity;
 
 public class DoodooBlockEntities {
 
@@ -37,6 +38,14 @@ public class DoodooBlockEntities {
                     () -> BlockEntityType.Builder.of(
                             HingeBlockEntity::new,
                             DoodooBlocks.HINGE.get()
+                    ).build(null)
+            );
+    
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WretchedSwineBlockEntity>> SWINE =
+            BLOCK_ENTITIES.register("wretched_swine",
+                    () -> BlockEntityType.Builder.of(
+                            WretchedSwineBlockEntity::new,
+                            DoodooBlocks.SWINE.get()
                     ).build(null)
             );
 
