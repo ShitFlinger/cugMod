@@ -1,10 +1,28 @@
 {
 	"variants": {
-		"facing=north": { "model": "cugmod:block/wretched_swine" },
-		"facing=south": { "model": "cugmod:block/wretched_swine", "y": 180 },
-		"facing=east":  { "model": "cugmod:block/wretched_swine", "y": 90 },
-		"facing=west":  { "model": "cugmod:block/wretched_swine", "y": 270 },
-		"facing=up":    { "model": "cugmod:block/wretched_swine", "x": -90 },
-		"facing=down":  { "model": "cugmod:block/wretched_swine", "x": 90 }
+		"facing=north,mood=happy": { "model": "cugmod:block/wretched_swine/happy" },
+		"facing=south,mood=happy": { "model": "cugmod:block/wretched_swine/happy", "y": 180 },
+		"facing=east,mood=happy":  { "model": "cugmod:block/wretched_swine/happy", "y": 90 },
+		"facing=west,mood=happy":  { "model": "cugmod:block/wretched_swine/happy", "y": 270 },
+		"facing=up,mood=happy":    { "model": "cugmod:block/wretched_swine/happy", "x": -90 },
+		"facing=down,mood=happy":  { "model": "cugmod:block/wretched_swine/happy", "x": 90 },
+		"facing=north,mood=hurt": { "model": "cugmod:block/wretched_swine/hurt" },
+		"facing=south,mood=hurt": { "model": "cugmod:block/wretched_swine/hurt", "y": 180 },
+		"facing=east,mood=hurt":  { "model": "cugmod:block/wretched_swine/hurt", "y": 90 },
+		"facing=west,mood=hurt":  { "model": "cugmod:block/wretched_swine/hurt", "y": 270 },
+		"facing=up,mood=hurt":    { "model": "cugmod:block/wretched_swine/hurt", "x": -90 },
+		"facing=down,mood=hurt":  { "model": "cugmod:block/wretched_swine/hurt", "x": 90 },
+		"facing=north,mood=angry": { "model": "cugmod:block/wretched_swine/angry" },
+		"facing=south,mood=angry": { "model": "cugmod:block/wretched_swine/angry", "y": 180 },
+		"facing=east,mood=angry":  { "model": "cugmod:block/wretched_swine/angry", "y": 90 },
+		"facing=west,mood=angry":  { "model": "cugmod:block/wretched_swine/angry", "y": 270 },
+		"facing=up,mood=angry":    { "model": "cugmod:block/wretched_swine/angry", "x": -90 },
+		"facing=down,mood=angry":  { "model": "cugmod:block/wretched_swine/angry", "x": 90 },
+		"facing=north,mood=burnt": { "model": "cugmod:block/wretched_swine/burnt" },
+		"facing=south,mood=burnt": { "model": "cugmod:block/wretched_swine/burnt", "y": 180 },
+		"facing=east,mood=burnt":  { "model": "cugmod:block/wretched_swine/burnt", "y": 90 },
+		"facing=west,mood=burnt":  { "model": "cugmod:block/wretched_swine/burnt", "y": 270 },
+		"facing=up,mood=burnt":    { "model": "cugmod:block/wretched_swine/burnt", "x": -90 },
+		"facing=down,mood=burnt":  { "model": "cugmod:block/wretched_swine/burnt", "x": 90 }
 	}
 }

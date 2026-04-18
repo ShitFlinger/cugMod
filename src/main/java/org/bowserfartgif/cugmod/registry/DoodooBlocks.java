@@ -8,7 +8,7 @@ import org.bowserfartgif.cugmod.Cugmod;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.bowserfartgif.cugmod.content.WretchedSwineBlock;
+import org.bowserfartgif.cugmod.content.swine.WretchedSwineBlock;
 import org.bowserfartgif.cugmod.content.control.joints.HingeBlock;
 import org.bowserfartgif.cugmod.content.control.wing.ControlSurfaceBlock;
 import org.bowserfartgif.cugmod.content.control.wing.WingBlock;
@@ -52,7 +52,7 @@ public class DoodooBlocks {
                     )
             );
 
-    public static final DeferredHolder<Block, Block> SWINE =
+    public static final DeferredHolder<Block, WretchedSwineBlock> SWINE =
             BLOCKS.register("wretched_swine",
                     () -> new WretchedSwineBlock(BlockBehaviour.Properties.of()
                             .noOcclusion()
@@ -73,11 +73,11 @@ public class DoodooBlocks {
                     )
             );
 
- public static void registerBlockItems(DeferredRegister.Items itemRegistry){
-     BLOCKS.getEntries().forEach(block -> {
-     itemRegistry.register(block.getId().getPath(),
-             () -> new BlockItem(block.get(), new Item.Properties()));
-     });
- }
-
+    public static void registerBlockItems(DeferredRegister.Items itemRegistry){
+        BLOCKS.getEntries().forEach(block -> {
+        itemRegistry.register(block.getId().getPath(),
+                () -> new BlockItem(block.get(), new Item.Properties()));
+        });
+    }
+ 
 }
