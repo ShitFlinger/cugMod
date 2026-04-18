@@ -53,8 +53,12 @@ public class WretchedSwineBlock extends Block implements EntityBlock, BlockWithS
         if(context.getPlayer() != null && context.getPlayer().isShiftKeyDown()){
             normal = normal.getOpposite();
         }
+        boolean hasHat = context.getLevel().random.nextFloat() <= 0.1f;
+        if (context.getLevel().isClientSide()) {
+            hasHat = false;
+        }
         return this.defaultBlockState()
-                .setValue(FACING, normal).setValue(HAT, context.getLevel().random.nextFloat() <= 0.1f);
+                .setValue(FACING, normal).setValue(HAT, hasHat);
     }
 
 
