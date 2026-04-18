@@ -32,18 +32,15 @@ public class WretchedSwineBlockEntity extends BlockEntity {
             
             SubLevel subLevel = Sable.HELPER.getContaining(level, blockPos);
             
-            if (blockState.getValue(WretchedSwineBlock.MOOD) != WretchedSwineBlock.Mood.BURNT) {
-                
-                Sable.HELPER.runIncludingSubLevels(level, blockPos.getCenter(), false, subLevel, (subLevel0, blockPos0) -> {
-                    BlockState blockState0 = level.getBlockState(blockPos0);
-                    Block block = blockState0.getBlock();
-                    if (block instanceof BaseFireBlock || blockState0.getFluidState().getType() instanceof LavaFluid) {
-                        this.addFireTicks(3);
-                        this.tryBurn();
-                    }
-                    return null;
-                });
-            }
+            Sable.HELPER.runIncludingSubLevels(level, blockPos.getCenter(), false, subLevel, (subLevel0, blockPos0) -> {
+                BlockState blockState0 = level.getBlockState(blockPos0);
+                Block block = blockState0.getBlock();
+                if (block instanceof BaseFireBlock || blockState0.getFluidState().getType() instanceof LavaFluid) {
+                    this.addFireTicks(3);
+                    this.tryBurn();
+                }
+                return null;
+            });
         }
         
         if (this.collisionCooldown > 0) {
@@ -81,10 +78,19 @@ public class WretchedSwineBlockEntity extends BlockEntity {
         if (level == null) {
             return;
         }
+        BlockState blockState = this.getBlockState();
+        BlockPos blockPos = this.getBlockPos();
         if (this.fireTicks >= 150) {
-            BlockState blockState = this.getBlockState().setValue(WretchedSwineBlock.MOOD, WretchedSwineBlock.Mood.BURNT);
-            level.setBlockAndUpdate(this.getBlockPos(), blockState);
-            this.fireTicks = 0;
+            if (blockState.getValue(WretchedSwineBlock.MOOD) != WretchedSwineBlock.Mood.BURNT) {
+                BlockState newState = blockState.setValue(WretchedSwineBlock.MOOD, WretchedSwineBlock.Mood.BURNT);
+                level.setBlockAndUpdate(blockPos, newState);
+                this.fireTicks = 0;
+            }
+        }
+        if (this.fireTicks >= 750) {
+            if (blockState.getValue(WretchedSwineBlock.MOOD) == WretchedSwineBlock.Mood.BURNT) {
+                level.destroyBlock(blockPos, false);
+            }
         }
     }
 }
