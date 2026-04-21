@@ -2,6 +2,7 @@ package org.bowserfartgif.cugmod.registry;
 
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -15,6 +16,8 @@ import org.bowserfartgif.cugmod.content.control.wing.WingBlock;
 import org.bowserfartgif.cugmod.content.propulsion.ThrusterBlock;
 import org.bowserfartgif.cugmod.content.swine.WretchedSwineBlock;
 import org.bowserfartgif.cugmod.content.swine.WretchedSwineBlockItem;
+
+import static org.bowserfartgif.cugmod.Cugmod.ITEMS;
 
 public class DoodooBlocks {
     
@@ -68,8 +71,11 @@ public class DoodooBlocks {
                                                  .requiresCorrectToolForDrops()
                                                  .sound(DoodooSoundTypes.SWINE))
     );
-    
-    
+
+    // Cugmod(TM) does NOT tolerate making entire classes for 1 Field.
+    public static final DeferredHolder<Item, Item> WRETCHED_DISC = ITEMS.register("wretched_disc",
+            () -> new Item(new Item.Properties().jukeboxPlayable(DoodooSounds.WRETCHED_DISC_KEY).rarity(Rarity.EPIC).stacksTo(1)));
+
     public static final DeferredHolder<Block, HingeBlock> HINGE = BLOCKS.register(
             "hinge",
             () -> new HingeBlock(BlockBehaviour.Properties.of()

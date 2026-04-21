@@ -85,19 +85,6 @@ repositories {
         url = "https://maven.ryanhcode.dev/releases/"
     }
 
-    maven {
-        name = "Ryan's Maven"
-        url = "https://maven.ryanhcode.dev/private/"
-        metadataSources { artifact() }
-        authentication {
-            basic(BasicAuthentication)
-        }
-        credentials {
-            username = System.getenv("local_maven_user") ?: project.findProperty("ryanhcodeMavenUser")
-            password = System.getenv("local_maven_token") ?: project.findProperty("ryanhcodeMavenToken")
-        }
-    }
-
     maven { url = "https://mvn.devos.one/snapshots" }
     maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/" }
 }

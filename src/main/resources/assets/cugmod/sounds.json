@@ -21,5 +21,18 @@
 
   "swine_fall": {
     "sounds": ["cugmod:swine_fall"]
+  },
+
+  "monch": {
+    "sounds": ["cugmod:monch"]
+  },
+
+  "wretched_disc": {
+    "sounds": [
+      {
+        "name": "cugmod:wretched_disc",
+        "stream": true
+      }
+    ]
   }
 }
