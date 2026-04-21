@@ -67,7 +67,7 @@ public class CamberedWingBlock extends Block implements BlockSubLevelLiftProvide
 
     @Override
     public @NotNull Direction sable$getNormal(final BlockState blockState) {
-        return blockState.getValue(FACING);
+        return blockState.getValue(FACING).getOpposite();
     }
 
     @Override
