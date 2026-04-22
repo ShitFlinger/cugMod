@@ -4,13 +4,14 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -21,16 +22,20 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.bowserfartgif.cugmod.registry.DoodooBlocks;
-import org.bowserfartgif.cugmod.registry.DoodooBlockEntities;
-import org.bowserfartgif.cugmod.registry.DoodooPartialModels;
-import org.bowserfartgif.cugmod.registry.DoodooSounds;
+import org.bowserfartgif.cugmod.registry.*;
+import org.bowserfartgif.cugmod.registry.data.DoodooLanguageProvider;
+import org.bowserfartgif.cugmod.registry.data.DoodooLootTableProvider;
 import org.slf4j.Logger;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.List;
+import java.util.Set;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(Cugmod.MODID)
@@ -57,12 +62,12 @@ public class Cugmod {
         modEventBus.addListener(this::commonSetup);
         BLOCKS.register(modEventBus);
         DoodooSounds.SOUND_EVENTS.register(modEventBus);
-        DoodooBlocks.registerBlockItems(ITEMS);
-        DoodooBlocks.BLOCKS.register(modEventBus);
-        ITEMS.register(modEventBus);
+        DoodooBlocks.bootstrap();
+        DoodooBlocks.registerBlockItems();
+        DoodooItems.bootstrap();
+        DoodooBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
         NeoForge.EVENT_BUS.register(this);
-        DoodooBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         modEventBus.addListener(this::addCreative);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
@@ -98,6 +103,33 @@ public class Cugmod {
         
         private static void registerBlockRenderLayers() {
             ItemBlockRenderTypes.setRenderLayer(DoodooBlocks.SWINE.get(), RenderType.cutout());
+        }
+        
+        @SubscribeEvent
+        public static void gatherData(GatherDataEvent event) {
+            DataGenerator generator = event.getGenerator();
+            PackOutput output = generator.getPackOutput();
+            ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+            
+            generator.addProvider(
+                    event.includeServer(),
+                    new LootTableProvider(
+                            output,
+                            Set.of(),
+                            List.of(new LootTableProvider.SubProviderEntry(
+                                    DoodooLootTableProvider::new, LootContextParamSets.BLOCK
+                            )),
+                            event.getLookupProvider()
+                    )
+            );
+            
+            generator.addProvider(
+                    event.includeClient(),
+                    new DoodooLanguageProvider(
+                            output,
+                            "en_us"
+                    )
+            );
         }
     }
 }

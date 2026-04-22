@@ -37,6 +37,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.Tags;
 import org.bowserfartgif.cugmod.registry.DoodooBlockEntities;
 import org.bowserfartgif.cugmod.registry.DoodooBlocks;
+import org.bowserfartgif.cugmod.registry.DoodooItems;
 import org.bowserfartgif.cugmod.registry.DoodooSounds;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -83,7 +84,7 @@ public class WretchedSwineBlock extends Block implements EntityBlock, BlockWithS
         if (stack.is(Tags.Items.MUSIC_DISCS)) {
             if (!level.isClientSide) {
                 stack.consume(1, player);
-                player.addItem(DoodooBlocks.WRETCHED_DISC.get().getDefaultInstance());
+                player.addItem(DoodooItems.WRETCHED_DISC.get().getDefaultInstance());
 
             }
             level.playSound(player, pos, DoodooSounds.MONCH.get(), SoundSource.BLOCKS, 1, 1);
