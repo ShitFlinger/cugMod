@@ -67,7 +67,7 @@ public class WretchedSwineBlockItem extends ItemNameBlockItem {
     
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int timeLeft) {
-        if (entity instanceof Player player && !level.isClientSide() && false /*this is because it doesnt work shut up*/ ) {
+        if (entity instanceof Player player && !level.isClientSide() ) {
             ServerSubLevelContainer container = SubLevelContainer.getContainer((ServerLevel) level);
             
             assert container != null;
@@ -94,9 +94,9 @@ public class WretchedSwineBlockItem extends ItemNameBlockItem {
             RigidBodyHandle handle = physicsSystem.getPhysicsHandle(subLevel);
             
             int timeCharged = this.getUseDuration(stack, entity) - timeLeft;
+            float power = BowItem.getPowerForTime(timeCharged) * 20.00f;
             
-            float power = BowItem.getPowerForTime(timeCharged) * 10.00f;
-            handle.applyLinearImpulse(viewVector.mul(power));
+            handle.addLinearAndAngularVelocity(viewVector.mul(power), JOMLConversion.ZERO);
         }
     }
 

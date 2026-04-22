@@ -130,10 +130,6 @@ public class WretchedSwineBlock extends Block implements EntityBlock, BlockWithS
                     bounds
             );
             level.updateNeighborsAt(pos, oldState.getBlock());
-            SubLevelPhysicsSystem physicsSystem = SubLevelPhysicsSystem.get(level);
-            RigidBodyHandle handle = physicsSystem.getPhysicsHandle(serverSubLevel);
-            
-            handle.applyLinearAndAngularImpulse(new Vector3d(2, 5, 2), new Vector3d(0, 5, 0));
         }
     }
     
