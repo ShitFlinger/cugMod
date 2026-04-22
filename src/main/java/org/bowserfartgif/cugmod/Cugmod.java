@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -29,6 +30,8 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.bowserfartgif.cugmod.registry.*;
+import org.bowserfartgif.cugmod.registry.data.DoodooBlockTagsProvider;
+import org.bowserfartgif.cugmod.registry.data.DoodooItemTagsProvider;
 import org.bowserfartgif.cugmod.registry.data.DoodooLanguageProvider;
 import org.bowserfartgif.cugmod.registry.data.DoodooLootTableProvider;
 import org.slf4j.Logger;
@@ -36,6 +39,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(Cugmod.MODID)
@@ -63,7 +67,6 @@ public class Cugmod {
         BLOCKS.register(modEventBus);
         DoodooSounds.SOUND_EVENTS.register(modEventBus);
         DoodooBlocks.bootstrap();
-        DoodooBlocks.registerBlockItems();
         DoodooItems.bootstrap();
         DoodooBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
@@ -109,6 +112,7 @@ public class Cugmod {
         public static void gatherData(GatherDataEvent event) {
             DataGenerator generator = event.getGenerator();
             PackOutput output = generator.getPackOutput();
+            CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
             ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
             
             generator.addProvider(
@@ -119,7 +123,7 @@ public class Cugmod {
                             List.of(new LootTableProvider.SubProviderEntry(
                                     DoodooLootTableProvider::new, LootContextParamSets.BLOCK
                             )),
-                            event.getLookupProvider()
+                            lookupProvider
                     )
             );
             
@@ -128,6 +132,24 @@ public class Cugmod {
                     new DoodooLanguageProvider(
                             output,
                             "en_us"
+                    )
+            );
+            
+            generator.addProvider(
+                    event.includeServer(),
+                    new DoodooBlockTagsProvider(
+                            output,
+                            lookupProvider,
+                            existingFileHelper
+                    )
+            );
+            
+            generator.addProvider(
+                    event.includeServer(),
+                    new DoodooItemTagsProvider(
+                            output,
+                            lookupProvider,
+                            existingFileHelper
                     )
             );
         }

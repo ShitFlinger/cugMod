@@ -1,0 +1,8 @@
+{
+  "values": [
+    "cugmod:thruster",
+    "cugmod:wing",
+    "cugmod:cambered_wing",
+    "cugmod:control_surface"
+  ]
+}

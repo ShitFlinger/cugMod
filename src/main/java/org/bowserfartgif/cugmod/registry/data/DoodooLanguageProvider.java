@@ -12,8 +12,8 @@ import java.util.function.Supplier;
 
 public class DoodooLanguageProvider extends LanguageProvider {
     
-    public static final Map<Supplier<? extends Block>, String> BLOCK_LANGS = new Object2ObjectArrayMap<>();
-    public static final Map<Supplier<? extends Item>, String> ITEM_LANGS = new Object2ObjectArrayMap<>();
+    private static final Map<Supplier<? extends Block>, String> BLOCK_LANGS = new Object2ObjectArrayMap<>();
+    private static final Map<Supplier<? extends Item>, String> ITEM_LANGS = new Object2ObjectArrayMap<>();
     
     public DoodooLanguageProvider(PackOutput output, String locale) {
         super(output, Cugmod.MODID, locale);
@@ -21,15 +21,19 @@ public class DoodooLanguageProvider extends LanguageProvider {
     
     @Override
     protected void addTranslations() {
-        BLOCK_LANGS.forEach((block, lang) -> {
-            this.add(block.get(), lang);
-        });
+        BLOCK_LANGS.forEach(this::addBlock);
         
-        ITEM_LANGS.forEach((item, lang) -> {
-            this.add(item.get(), lang);
-        });
+        ITEM_LANGS.forEach(this::addItem);
         
         this.add("item.cugmod.wretched_disc.desc", "Bad Piggies theme - Ilmari Hakkola");
         this.add("lore.cugmod.thruster.line2", "§7It goes pretty fast I think, don't ask me how it works with only a nozzle, though");
+    }
+    
+    public static void addBlockTranslation(Supplier<? extends Block> block, String name) {
+        BLOCK_LANGS.put(block, name);
+    }
+    
+    public static void addItemTranslation(Supplier<? extends Item> item, String name) {
+        ITEM_LANGS.put(item, name);
     }
 }

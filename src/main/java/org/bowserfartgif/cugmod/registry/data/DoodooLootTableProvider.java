@@ -6,12 +6,10 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.bowserfartgif.cugmod.Cugmod;
@@ -56,7 +54,6 @@ public class DoodooLootTableProvider implements LootTableSubProvider {
     public static <T extends Block> LootTable.Builder dropSelf(Supplier<T> block) {
         return LootTable.lootTable()
                 .withPool(LootPool.lootPool()
-                                  .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1.0F)))
                                   .setRolls(ConstantValue.exactly(1.0F))
                                   .add(LootItem.lootTableItem(block.get())
                                   )

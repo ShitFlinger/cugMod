@@ -1,57 +1,43 @@
 package org.bowserfartgif.cugmod.content.swine;
 
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import dev.ryanhcode.sable.api.block.propeller.BlockEntityPropeller;
-import dev.ryanhcode.sable.api.block.propeller.BlockEntitySubLevelPropellerActor;
-import dev.ryanhcode.sable.api.command.SableCommandHelper;
-import dev.ryanhcode.sable.api.physics.PhysicsPipeline;
-import dev.ryanhcode.sable.api.physics.PhysicsPipelineBody;
 import dev.ryanhcode.sable.api.physics.force.ForceGroups;
 import dev.ryanhcode.sable.api.physics.force.QueuedForceGroup;
-import dev.ryanhcode.sable.api.physics.handle.RigidBodyHandle;
 import dev.ryanhcode.sable.api.sublevel.ServerSubLevelContainer;
 import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
-import dev.ryanhcode.sable.companion.SableCompanion;
-import dev.ryanhcode.sable.companion.impl.SableCompanionUtil;
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import dev.ryanhcode.sable.companion.math.Pose3d;
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
 import dev.ryanhcode.sable.sublevel.SubLevel;
 import dev.ryanhcode.sable.sublevel.plot.LevelPlot;
 import dev.ryanhcode.sable.sublevel.system.SubLevelPhysicsSystem;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.EventHooks;
 import org.bowserfartgif.cugmod.registry.DoodooBlocks;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
 
 import static dev.ryanhcode.sable.api.block.propeller.BlockEntitySubLevelPropellerActor.THRUST_POSITION;
 import static dev.ryanhcode.sable.api.block.propeller.BlockEntitySubLevelPropellerActor.THRUST_VECTOR;
 
-public class WretchedSwineBlockItem extends BlockItem {
+public class WretchedSwineBlockItem extends ItemNameBlockItem {
     
     private final WretchedSwineBlock.Mood mood;
     
-    public WretchedSwineBlockItem(Properties properties, WretchedSwineBlock.Mood mood) {
-        super(DoodooBlocks.SWINE.get(), properties);
+    public WretchedSwineBlockItem(Block block, Properties properties, WretchedSwineBlock.Mood mood) {
+        super(block, properties);
         this.mood = mood;
     }
     
@@ -64,7 +50,7 @@ public class WretchedSwineBlockItem extends BlockItem {
         }
         return state.setValue(WretchedSwineBlock.MOOD, this.mood);
     }
-
+    
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity entityLiving, int timeLeft) {
         if (entityLiving instanceof Player player) {
@@ -90,7 +76,7 @@ public class WretchedSwineBlockItem extends BlockItem {
     public int getUseDuration(ItemStack stack, LivingEntity entity) {
         return 72000;
     }
-
+    
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
         return UseAnim.BOW;

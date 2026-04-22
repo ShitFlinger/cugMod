@@ -4,11 +4,13 @@ import dev.ryanhcode.sable.api.SubLevelAssemblyHelper;
 import dev.ryanhcode.sable.api.block.BlockWithSubLevelCollisionCallback;
 import dev.ryanhcode.sable.api.physics.callback.BlockSubLevelCollisionCallback;
 import dev.ryanhcode.sable.companion.math.BoundingBox3i;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -17,9 +19,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.AirBlock;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -30,19 +31,27 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.DynamicLoot;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
+import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.Tags;
+import org.bowserfartgif.cugmod.Cugmod;
 import org.bowserfartgif.cugmod.registry.DoodooBlockEntities;
-import org.bowserfartgif.cugmod.registry.DoodooBlocks;
 import org.bowserfartgif.cugmod.registry.DoodooItems;
 import org.bowserfartgif.cugmod.registry.DoodooSounds;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 public class WretchedSwineBlock extends Block implements EntityBlock, BlockWithSubLevelCollisionCallback {
 
@@ -143,17 +152,56 @@ public class WretchedSwineBlock extends Block implements EntityBlock, BlockWithS
         };
     }
     
+    @SuppressWarnings("deprecation")
+    @Override
+    @NotNull
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
+        return Objects.requireNonNull(DoodooItems.REGISTRY.get(state.getValue(MOOD).getItemId())).getDefaultInstance();
+    }
+    
     public enum Mood implements StringRepresentable {
-        HAPPY,
-        HURT,
-        ANGRY,
-        BURNT;
+        HAPPY("wretched"),
+        HURT("hurt"),
+        ANGRY("angry"),
+        BURNT("burnt");
+        
+        private final ResourceLocation itemId;
+        
+        Mood(String itemName) {
+            this.itemId = Cugmod.id(itemName + "_swine");
+        }
         
         @Override
         @NotNull
         public String getSerializedName() {
             return this.name().toLowerCase();
         }
+        
+        public ResourceLocation getItemId() {
+            return this.itemId;
+        }
+    }
+    
+    public static LootTable.Builder addLoot(LootTable.Builder builder, WretchedSwineBlock block) {
+        addLoot(builder, block, Mood.HAPPY);
+        addLoot(builder, block, Mood.HURT);
+        addLoot(builder, block, Mood.ANGRY);
+        addLoot(builder, block, Mood.BURNT);
+        return builder;
+    }
+    
+    public static void addLoot(LootTable.Builder builder, WretchedSwineBlock block, Mood mood) {
+        builder.withPool(LootPool.lootPool()
+                          .setRolls(ConstantValue.exactly(1.0F))
+                          .add(swineLoot(mood))
+                          .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+                          .setProperties(StatePropertiesPredicate.Builder.properties()
+                          .hasProperty(WretchedSwineBlock.MOOD, mood)))
+        );
+    }
+    
+    private static LootPoolEntryContainer.Builder<?> swineLoot(Mood mood) {
+        return LootItem.lootTableItem(Objects.requireNonNull(DoodooItems.REGISTRY.get(mood.getItemId())));
     }
     
 }

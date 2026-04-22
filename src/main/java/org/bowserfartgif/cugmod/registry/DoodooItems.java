@@ -2,6 +2,7 @@ package org.bowserfartgif.cugmod.registry;
 
 import foundry.veil.platform.registry.RegistrationProvider;
 import foundry.veil.platform.registry.RegistryObject;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
@@ -20,6 +21,7 @@ import static org.bowserfartgif.cugmod.Cugmod.MODID;
 
 public class DoodooItems {
     public static final RegistrationProvider<Item> ITEMS = RegistrationProvider.get(Registries.ITEM, MODID);
+    public static final Registry<Item> REGISTRY = ITEMS.asVanillaRegistry();
     
     public static void bootstrap() {
     }

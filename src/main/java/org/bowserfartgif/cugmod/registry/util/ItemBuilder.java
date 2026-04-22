@@ -3,11 +3,13 @@ package org.bowserfartgif.cugmod.registry.util;
 import foundry.veil.platform.registry.RegistrationProvider;
 import foundry.veil.platform.registry.RegistryObject;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import org.bowserfartgif.cugmod.registry.data.DoodooItemTagsProvider;
 import org.bowserfartgif.cugmod.registry.data.DoodooLanguageProvider;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -19,7 +21,11 @@ public class ItemBuilder<I extends Item> {
     
     private final Function<Item.Properties, I> factory;
     private final String name;
+    
     private Supplier<Item.Properties> itemProperties = Item.Properties::new;
+    
+    private Iterable<TagKey<Item>> tags = Set.of();
+    
     @Nullable
     private String lang = null;
     
@@ -38,10 +44,18 @@ public class ItemBuilder<I extends Item> {
         return this;
     }
     
+    public ItemBuilder<I> tags(Iterable<TagKey<Item>> tags) {
+        this.tags = tags;
+        return this;
+    }
+    
     public RegistryObject<I> build() {
         RegistryObject<I> item = ITEMS.register(this.name, () -> this.factory.apply(this.itemProperties.get()));
         if (this.lang != null) {
-            DoodooLanguageProvider.ITEM_LANGS.put(item, this.lang);
+            DoodooLanguageProvider.addItemTranslation(item, this.lang);
+        }
+        for (TagKey<Item> tag : this.tags) {
+            DoodooItemTagsProvider.addItemTag(tag, item);
         }
         return item;
     }

@@ -2,15 +2,13 @@ package org.bowserfartgif.cugmod.registry;
 
 import foundry.veil.platform.registry.RegistrationProvider;
 import foundry.veil.platform.registry.RegistryObject;
-import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.world.level.storage.loot.LootTable;
 import org.bowserfartgif.cugmod.content.control.joints.HingeBlock;
 import org.bowserfartgif.cugmod.content.control.wing.CamberedWingBlock;
 import org.bowserfartgif.cugmod.content.control.wing.ControlSurfaceBlock;
@@ -20,13 +18,15 @@ import org.bowserfartgif.cugmod.content.swine.WretchedSwineBlock;
 import org.bowserfartgif.cugmod.content.swine.WretchedSwineBlockItem;
 import org.bowserfartgif.cugmod.registry.util.BlockBuilder;
 
+import java.util.Set;
 import java.util.function.Function;
 
 import static org.bowserfartgif.cugmod.Cugmod.MODID;
 
 public class DoodooBlocks {
     
-    public static final RegistrationProvider<Item> ITEMS = RegistrationProvider.get(Registries.ITEM, MODID);
+    public static final RegistrationProvider<Block> BLOCKS = RegistrationProvider.get(Registries.BLOCK, MODID);
+    public static final Registry<Block> REGISTRY = BLOCKS.asVanillaRegistry();
     
     public static void bootstrap() {
     }
@@ -39,6 +39,7 @@ public class DoodooBlocks {
                     .sound(SoundType.COPPER))
             .lang("Thruster")
             .dropSelf()
+            .tags(Set.of(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE))
             .simpleItem()
             .build();
     
@@ -50,6 +51,7 @@ public class DoodooBlocks {
                     .sound(SoundType.COPPER))
             .lang("Wing Panel")
             .dropSelf()
+            .tags(Set.of(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE))
             .simpleItem()
             .build();
     
@@ -61,6 +63,7 @@ public class DoodooBlocks {
                     .sound(SoundType.COPPER))
             .lang("Cambered Wing")
             .dropSelf()
+            .tags(Set.of(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE))
             .simpleItem()
             .build();
     
@@ -73,6 +76,7 @@ public class DoodooBlocks {
                     .sound(SoundType.COPPER))
             .lang("Control Surface")
             .dropSelf()
+            .tags(Set.of(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE))
             .simpleItem()
             .build();
     
@@ -80,11 +84,21 @@ public class DoodooBlocks {
             .properties(() -> BlockBehaviour.Properties.of()
                                 .noOcclusion()
                                 .strength(0.2f)
-                                .requiresCorrectToolForDrops()
                                 .sound(DoodooSoundTypes.SWINE))
-            .lang("Wretched Swine")
-            .dropSelf()
-            .simpleItem()
+            .lootTable((block) ->
+                               WretchedSwineBlock.addLoot(LootTable.lootTable(), block.get()))
+            .item("wretched_swine", (block, properties) ->
+                    new WretchedSwineBlockItem(block, properties, WretchedSwineBlock.Mood.HAPPY))
+            .lang("Wretched Swine").endItem()
+            .item("hurt_swine", (block, properties) ->
+                    new WretchedSwineBlockItem(block, properties, WretchedSwineBlock.Mood.HURT))
+            .lang("Hurt Swine").endItem()
+            .item("angry_swine", (block, properties) ->
+                    new WretchedSwineBlockItem(block, properties, WretchedSwineBlock.Mood.ANGRY))
+            .lang("Angry Swine").endItem()
+            .item("burnt_swine", (block, properties) ->
+                    new WretchedSwineBlockItem(block, properties, WretchedSwineBlock.Mood.BURNT))
+            .lang("Burnt Swine").endItem()
             .build();
     
     public static final RegistryObject<HingeBlock> HINGE = block("hinge", HingeBlock::new)
@@ -97,30 +111,6 @@ public class DoodooBlocks {
             .dropSelf()
             .simpleItem()
             .build();
-    
-    public static void registerBlockItems() {
-        registerSpecialBlockItems(ITEMS);
-    }
-    
-    private static void registerSpecialBlockItems(RegistrationProvider<Item> registrar) {
-        registerSwineBlockItems(registrar);
-        
-    }
-    
-    private static void registerSwineBlockItems(RegistrationProvider<Item> registrar) {
-        registrar.register(
-                "wretched_swine",
-                () -> new WretchedSwineBlockItem(new Item.Properties(), WretchedSwineBlock.Mood.HAPPY)
-        );
-        registrar.register(
-                "burnt_swine",
-                () -> new WretchedSwineBlockItem(new Item.Properties(), WretchedSwineBlock.Mood.BURNT)
-        );
-        registrar.register(
-                "angry_swine",
-                () -> new WretchedSwineBlockItem(new Item.Properties(), WretchedSwineBlock.Mood.ANGRY)
-        );
-    }
     
     private static <B extends Block> BlockBuilder<B> block(String name, Function<BlockBehaviour.Properties, B> factory) {
         return new BlockBuilder<>(name, factory);

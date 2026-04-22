@@ -3,17 +3,76 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "block": "cugmod:wretched_swine",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "mood": "happy"
+          }
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "cugmod:wretched_swine"
         }
       ],
-      "functions": [
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
         {
-          "add": false,
-          "count": 1.0,
-          "function": "minecraft:set_count"
+          "block": "cugmod:wretched_swine",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "mood": "hurt"
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "cugmod:hurt_swine"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "block": "cugmod:wretched_swine",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "mood": "angry"
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "cugmod:angry_swine"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "block": "cugmod:wretched_swine",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "mood": "burnt"
+          }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "cugmod:burnt_swine"
         }
       ],
       "rolls": 1.0
