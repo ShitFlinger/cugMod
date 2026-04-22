@@ -80,14 +80,14 @@ public class WretchedSwineBlockEntity extends BlockEntity {
         }
         BlockState blockState = this.getBlockState();
         BlockPos blockPos = this.getBlockPos();
-        if (this.fireTicks >= 150) {
+        if (this.fireTicks >= 300) {
             if (blockState.getValue(WretchedSwineBlock.MOOD) != WretchedSwineBlock.Mood.BURNT) {
                 BlockState newState = blockState.setValue(WretchedSwineBlock.MOOD, WretchedSwineBlock.Mood.BURNT);
                 level.setBlockAndUpdate(blockPos, newState);
                 this.fireTicks = 0;
             }
         }
-        if (this.fireTicks >= 750) {
+        if (this.fireTicks >= 2000) {
             if (blockState.getValue(WretchedSwineBlock.MOOD) == WretchedSwineBlock.Mood.BURNT) {
                 level.destroyBlock(blockPos, false);
             }

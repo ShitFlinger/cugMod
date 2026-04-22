@@ -1,20 +1,27 @@
 package org.bowserfartgif.cugmod.content.swine;
 
+import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.api.SubLevelAssemblyHelper;
 import dev.ryanhcode.sable.api.block.BlockWithSubLevelCollisionCallback;
 import dev.ryanhcode.sable.api.physics.callback.BlockSubLevelCollisionCallback;
+import dev.ryanhcode.sable.api.physics.handle.RigidBodyHandle;
 import dev.ryanhcode.sable.companion.math.BoundingBox3i;
+import dev.ryanhcode.sable.companion.math.BoundingBox3ic;
+import dev.ryanhcode.sable.sublevel.ServerSubLevel;
+import dev.ryanhcode.sable.sublevel.SubLevel;
+import dev.ryanhcode.sable.sublevel.system.SubLevelPhysicsSystem;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -49,6 +56,7 @@ import org.bowserfartgif.cugmod.registry.DoodooItems;
 import org.bowserfartgif.cugmod.registry.DoodooSounds;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3d;
 
 import java.util.List;
 import java.util.Objects;
@@ -77,15 +85,11 @@ public class WretchedSwineBlock extends Block implements EntityBlock, BlockWithS
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context){
         Direction normal = context.getHorizontalDirection().getOpposite();
-        if(context.getPlayer() != null && context.getPlayer().isShiftKeyDown()){
+        if (context.getPlayer() != null && context.getPlayer().isShiftKeyDown()){
             normal = normal.getOpposite();
         }
-        boolean hasHat = context.getLevel().random.nextFloat() <= 0.1f;
-        if (context.getLevel().isClientSide()) {
-            hasHat = false;
-        }
-        return this.defaultBlockState()
-                .setValue(FACING, normal).setValue(HAT, hasHat);
+        
+        return this.defaultBlockState().setValue(FACING, normal);
     }
 
     @Override
@@ -111,12 +115,31 @@ public class WretchedSwineBlock extends Block implements EntityBlock, BlockWithS
             return;
         }
         if (level instanceof ServerLevel serverLevel) {
+            SubLevel subLevel = Sable.HELPER.getContaining(serverLevel, pos);
+            if (subLevel != null && isSingleBlock(subLevel)) {
+                return;
+            }
+            
             BoundingBox3i bounds = BoundingBox3i.from(List.of(pos, pos.offset(1, 1, 1)));
             assert bounds != null;
             
-            SubLevelAssemblyHelper.assembleBlocks(serverLevel, pos, List.of(pos), bounds);
-            level.updateNeighborsAt(pos, state.getBlock());
+            ServerSubLevel serverSubLevel = SubLevelAssemblyHelper.assembleBlocks(
+                    serverLevel,
+                    pos,
+                    List.of(pos),
+                    bounds
+            );
+            level.updateNeighborsAt(pos, oldState.getBlock());
+            SubLevelPhysicsSystem physicsSystem = SubLevelPhysicsSystem.get(level);
+            RigidBodyHandle handle = physicsSystem.getPhysicsHandle(serverSubLevel);
+            
+            handle.applyLinearAndAngularImpulse(new Vector3d(2, 5, 2), new Vector3d(0, 5, 0));
         }
+    }
+    
+    @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+    
     }
     
     @Override
@@ -157,6 +180,11 @@ public class WretchedSwineBlock extends Block implements EntityBlock, BlockWithS
     @NotNull
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         return Objects.requireNonNull(DoodooItems.REGISTRY.get(state.getValue(MOOD).getItemId())).getDefaultInstance();
+    }
+    
+    private static boolean isSingleBlock(SubLevel subLevel) {
+        BoundingBox3ic bounds = subLevel.getPlot().getBoundingBox();
+        return bounds != null && bounds.minX() == bounds.maxX() && bounds.minY() == bounds.maxY() && bounds.minZ() == bounds.maxZ();
     }
     
     public enum Mood implements StringRepresentable {

@@ -2,19 +2,24 @@ package org.bowserfartgif.cugmod.content.swine;
 
 import dev.ryanhcode.sable.api.physics.force.ForceGroups;
 import dev.ryanhcode.sable.api.physics.force.QueuedForceGroup;
+import dev.ryanhcode.sable.api.physics.handle.RigidBodyHandle;
 import dev.ryanhcode.sable.api.sublevel.ServerSubLevelContainer;
 import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import dev.ryanhcode.sable.companion.math.Pose3d;
+import dev.ryanhcode.sable.platform.SableEventPlatform;
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
 import dev.ryanhcode.sable.sublevel.SubLevel;
 import dev.ryanhcode.sable.sublevel.plot.LevelPlot;
 import dev.ryanhcode.sable.sublevel.system.SubLevelPhysicsSystem;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
@@ -25,7 +30,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.bowserfartgif.cugmod.registry.DoodooBlocks;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
 
@@ -33,6 +37,8 @@ import static dev.ryanhcode.sable.api.block.propeller.BlockEntitySubLevelPropell
 import static dev.ryanhcode.sable.api.block.propeller.BlockEntitySubLevelPropellerActor.THRUST_VECTOR;
 
 public class WretchedSwineBlockItem extends ItemNameBlockItem {
+    
+    private static final double ROOT_2 = Math.sqrt(2.0d);
     
     private final WretchedSwineBlock.Mood mood;
     
@@ -48,27 +54,49 @@ public class WretchedSwineBlockItem extends ItemNameBlockItem {
         if (state == null) {
             return null;
         }
-        return state.setValue(WretchedSwineBlock.MOOD, this.mood);
+        return this.getPlacementState(context.getLevel(), state);
+    }
+    
+    BlockState getPlacementState(Level level, BlockState state) {
+        boolean hasHat = level.random.nextFloat() <= 0.1f;
+        if (level.isClientSide()) {
+            hasHat = false;
+        }
+        return state.setValue(WretchedSwineBlock.MOOD, this.mood).setValue(WretchedSwineBlock.HAT, hasHat);
     }
     
     @Override
-    public void releaseUsing(ItemStack stack, Level level, LivingEntity entityLiving, int timeLeft) {
-        if (entityLiving instanceof Player player) {
-            final SubLevelContainer plotContainer = SubLevelContainer.getContainer(level);
-
-            final Vec3 playerPos = player.position();
-
-            final Pose3d pose = new Pose3d();
-            pose.position().set(playerPos.x, playerPos.y, playerPos.z);
-
-            final SubLevel subLevel = plotContainer.allocateNewSubLevel(pose);
-            final LevelPlot plot = subLevel.getPlot();
-
-            final ChunkPos center = plot.getCenterChunk();
+    public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int timeLeft) {
+        if (entity instanceof Player player && !level.isClientSide() && false /*this is because it doesnt work shut up*/ ) {
+            ServerSubLevelContainer container = SubLevelContainer.getContainer((ServerLevel) level);
+            
+            assert container != null;
+            
+            Vec3 playerPos = player.getEyePosition();
+            Vector3d viewVector = JOMLConversion.toJOML(player.getViewVector(1.0f)).mul(ROOT_2);
+            
+            Pose3d pose = new Pose3d();
+            pose.position().set(playerPos.x + viewVector.x, playerPos.y + viewVector.y, playerPos.z + viewVector.z);
+            
+            //rotate to match the player's view vector. why does it look so shit? idk.
+            //i wrote this for cassini's space-swimming and it just kinda works ig
+            pose.orientation().rotationY((180.0f - player.getYRot()) * Mth.DEG_TO_RAD).rotateX(-player.getXRot() * Mth.DEG_TO_RAD);
+            
+            ServerSubLevel subLevel = (ServerSubLevel) container.allocateNewSubLevel(pose);
+            LevelPlot plot = subLevel.getPlot();
+            ChunkPos center = plot.getCenterChunk();
             plot.newEmptyChunk(center);
-
-            plot.getEmbeddedLevelAccessor().setBlock(BlockPos.ZERO, DoodooBlocks.SWINE.get().defaultBlockState(), 3);
+            
+            plot.getEmbeddedLevelAccessor().setBlock(BlockPos.ZERO, this.getPlacementState(level, DoodooBlocks.SWINE.get().defaultBlockState()), 3);
             subLevel.updateLastPose();
+            
+            SubLevelPhysicsSystem physicsSystem = container.physicsSystem();
+            RigidBodyHandle handle = physicsSystem.getPhysicsHandle(subLevel);
+            
+            int timeCharged = this.getUseDuration(stack, entity) - timeLeft;
+            
+            float power = BowItem.getPowerForTime(timeCharged) * 10.00f;
+            handle.applyLinearImpulse(viewVector.mul(power));
         }
     }
 
@@ -83,7 +111,7 @@ public class WretchedSwineBlockItem extends ItemNameBlockItem {
     }
 
     public void applyForces(final ServerSubLevel subLevel, final Vec3 thrustDirection, final BlockPos blockPos, final double timeStep) {
-        final Vec3 thrust = thrustDirection.scale(1 * timeStep);
+        final Vec3 thrust = thrustDirection.scale(timeStep);
 
         THRUST_POSITION.set(JOMLConversion.atCenterOf(blockPos));
         THRUST_VECTOR.set(thrust.x, thrust.y, thrust.z);
@@ -95,7 +123,12 @@ public class WretchedSwineBlockItem extends ItemNameBlockItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
-
+        
+        if (true) {
+            player.startUsingItem(hand);
+            return InteractionResultHolder.consume(itemstack);
+        }
+        
         if (!level.isClientSide) {
 
             ServerSubLevelContainer plotContainer = (ServerSubLevelContainer) SubLevelContainer.getContainer(level);

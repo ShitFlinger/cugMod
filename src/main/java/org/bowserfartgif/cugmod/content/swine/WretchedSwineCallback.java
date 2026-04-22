@@ -20,7 +20,7 @@ public class WretchedSwineCallback implements BlockSubLevelCollisionCallback {
     public static final WretchedSwineCallback INSTANCE = new WretchedSwineCallback();
     
     public double getTriggerVelocity() {
-        return 10.0;
+        return 12.0;
     }
     
     @Override
