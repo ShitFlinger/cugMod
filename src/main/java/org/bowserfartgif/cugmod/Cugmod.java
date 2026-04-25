@@ -4,6 +4,8 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
@@ -29,6 +31,9 @@ import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.bowserfartgif.cugmod.content.harpoon.HarpoonEntityRenderer;
+import org.bowserfartgif.cugmod.content.harpoon.HarpoonGunItem;
+import org.bowserfartgif.cugmod.content.harpoon.HarpoonOwner;
 import org.bowserfartgif.cugmod.registry.*;
 import org.bowserfartgif.cugmod.registry.data.DoodooBlockTagsProvider;
 import org.bowserfartgif.cugmod.registry.data.DoodooItemTagsProvider;
@@ -68,6 +73,7 @@ public class Cugmod {
         DoodooSounds.SOUND_EVENTS.register(modEventBus);
         DoodooBlocks.bootstrap();
         DoodooItems.bootstrap();
+        DoodooEntities.bootstrap();
         DoodooBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
         NeoForge.EVENT_BUS.register(this);
@@ -102,10 +108,33 @@ public class Cugmod {
             DoodooPartialModels.bootstrap();
             
             registerBlockRenderLayers();
+            registerItemProperties();
+            registerEntityRenderers();
         }
         
         private static void registerBlockRenderLayers() {
             ItemBlockRenderTypes.setRenderLayer(DoodooBlocks.SWINE.get(), RenderType.cutout());
+        }
+        
+        private static void registerItemProperties() {
+            ItemProperties.register(DoodooItems.HARPOON_GUN.get(), Cugmod.id("empty"), (itemStack, level, entity, seed) -> {
+                if (entity != null) {
+                    boolean isMainHand = entity.getMainHandItem() == itemStack;
+                    boolean isOffhand = entity.getOffhandItem() == itemStack;
+                    float value = entity instanceof HarpoonOwner extension && extension.cugMod$getHarpoon() != null ? 1.0f : 0.0f;
+                    if (isMainHand && entity.getMainHandItem().getItem() instanceof HarpoonGunItem) {
+                        return value;
+                    }
+                    if (isOffhand && entity.getOffhandItem().getItem() instanceof HarpoonGunItem) {
+                        return value;
+                    }
+                }
+                return 0.0f;
+            });
+        }
+        
+        private static void registerEntityRenderers() {
+            EntityRenderers.register(DoodooEntities.HARPOON.get(), HarpoonEntityRenderer::new);
         }
         
         @SubscribeEvent

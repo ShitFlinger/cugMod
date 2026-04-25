@@ -6,16 +6,10 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import org.bowserfartgif.cugmod.registry.util.BlockBuilder;
+import org.bowserfartgif.cugmod.content.harpoon.HarpoonGunItem;
 import org.bowserfartgif.cugmod.registry.util.ItemBuilder;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static org.bowserfartgif.cugmod.Cugmod.MODID;
 
@@ -32,6 +26,11 @@ public class DoodooItems {
             .properties(() -> new Item.Properties().jukeboxPlayable(DoodooSounds.WRETCHED_DISC_KEY).rarity(
                     Rarity.EPIC).stacksTo(1))
             .lang("Wretched Music Disc")
+            .build();
+    
+    public static final RegistryObject<HarpoonGunItem> HARPOON_GUN = item("harpoon_gun", HarpoonGunItem::new)
+            .properties(() -> new Item.Properties().rarity(Rarity.RARE).stacksTo(1))
+            .lang("Harpoon Gun")
             .build();
     
     private static <I extends Item> ItemBuilder<I> item(String name, Function<Item.Properties, I> factory) {

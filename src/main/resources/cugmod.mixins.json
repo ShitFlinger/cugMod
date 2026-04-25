@@ -4,6 +4,8 @@
   "package": "org.bowserfartgif.cugmod.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "harpoon.HarpoonPlayerMixin",
+    "harpoon.HarpoonServerLevelMixin"
   ],
   "client": [
   ],

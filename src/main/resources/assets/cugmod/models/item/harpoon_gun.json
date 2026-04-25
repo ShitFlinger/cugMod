@@ -1,0 +1,11 @@
+{
+  "parent": "cugmod:item/harpoon_gun/full",
+  "overrides": [
+    {
+      "predicate": {
+        "cugmod:empty": 1
+      },
+      "model": "cugmod:item/harpoon_gun/empty"
+    }
+  ]
+}
