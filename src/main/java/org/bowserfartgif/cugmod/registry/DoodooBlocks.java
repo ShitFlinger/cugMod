@@ -87,9 +87,6 @@ public class DoodooBlocks {
                                 .sound(DoodooSoundTypes.SWINE))
             .lootTable((block) ->
                                WretchedSwineBlock.addLoot(LootTable.lootTable(), block.get()))
-            .item("wretched_swine", (block, properties) ->
-                    new WretchedSwineBlockItem(block, properties, WretchedSwineBlock.Mood.HAPPY))
-            .lang("Wretched Swine").endItem()
             .item("hurt_swine", (block, properties) ->
                     new WretchedSwineBlockItem(block, properties, WretchedSwineBlock.Mood.HURT))
             .lang("Hurt Swine").endItem()
@@ -99,6 +96,9 @@ public class DoodooBlocks {
             .item("burnt_swine", (block, properties) ->
                     new WretchedSwineBlockItem(block, properties, WretchedSwineBlock.Mood.BURNT))
             .lang("Burnt Swine").endItem()
+            .item("wretched_swine", (block, properties) ->
+                    new WretchedSwineBlockItem(block, properties, WretchedSwineBlock.Mood.HAPPY))
+            .lang("Wretched Swine").endItem()
             .build();
     
     public static final RegistryObject<HingeBlock> HINGE = block("hinge", HingeBlock::new)

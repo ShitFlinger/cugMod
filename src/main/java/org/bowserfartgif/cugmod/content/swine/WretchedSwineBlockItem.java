@@ -117,60 +117,10 @@ public class WretchedSwineBlockItem extends ItemNameBlockItem {
         return UseAnim.BOW;
     }
 
-    public void applyForces(final ServerSubLevel subLevel, final Vec3 thrustDirection, final BlockPos blockPos, final double timeStep) {
-        final Vec3 thrust = thrustDirection.scale(timeStep);
-
-        THRUST_POSITION.set(JOMLConversion.atCenterOf(blockPos));
-        THRUST_VECTOR.set(thrust.x, thrust.y, thrust.z);
-
-        final QueuedForceGroup forceGroup = subLevel.getOrCreateQueuedForceGroup(ForceGroups.PROPULSION.get());
-        forceGroup.applyAndRecordPointForce(new Vector3d(THRUST_POSITION), new Vector3d(THRUST_VECTOR));
-    }
-
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
-        
-        if (true) {
-            player.startUsingItem(hand);
-            return InteractionResultHolder.consume(itemstack);
-        }
-        
-        if (!level.isClientSide) {
-
-            ServerSubLevelContainer plotContainer = (ServerSubLevelContainer) SubLevelContainer.getContainer(level);
-
-            Vec3 playerPos = player.getEyePosition();
-
-            Pose3d pose = new Pose3d();
-            pose.position().set(playerPos.x, playerPos.y, playerPos.z);
-
-            SubLevel subLevel = plotContainer.allocateNewSubLevel(pose);
-            subLevel.setName("Jerry");
-
-            LevelPlot plot = subLevel.getPlot();
-
-            ChunkPos center = plot.getCenterChunk();
-            plot.newEmptyChunk(center);
-
-            plot.getEmbeddedLevelAccessor().setBlock(
-                    BlockPos.ZERO,
-                    DoodooBlocks.SWINE.get().defaultBlockState(),
-                    3
-            );
-
-            subLevel.updateLastPose();
-
-            // fucking kill me. guy I have no idea how to apply physics.
-            // I looked at SablePhysicsCommands.executeLinearImpulseCommand, I looked at Thrusters in both cugmod and cassini and they both do weird stuff I can't use.
-            // KILL MEEEEE
-            SubLevelPhysicsSystem system = SubLevelPhysicsSystem.get(level);
-            system.getPhysicsHandle((ServerSubLevel) subLevel)
-                    .applyLinearImpulse(
-                            JOMLConversion.toJOML(new Vec3(20, 1, 0))
-                    );
-        }
-
-        return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide);
+        player.startUsingItem(hand);
+        return InteractionResultHolder.consume(itemstack);
     }
 }
