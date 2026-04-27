@@ -73,10 +73,12 @@ public class WretchedSwineBlockItem extends ItemNameBlockItem {
             assert container != null;
             
             Vec3 playerPos = player.getEyePosition();
-            Vector3d viewVector = JOMLConversion.toJOML(player.getViewVector(1.0f)).mul(ROOT_2);
+            Vector3d viewVector = JOMLConversion.toJOML(player.getViewVector(1.0f));
+            Vector3d oldViewVector = JOMLConversion.toJOML(player.getViewVector(0.0f));
+            Vector3d spawnLocation = viewVector.mul(ROOT_2, new Vector3d());
             
             Pose3d pose = new Pose3d();
-            pose.position().set(playerPos.x + viewVector.x, playerPos.y + viewVector.y, playerPos.z + viewVector.z);
+            pose.position().set(playerPos.x + spawnLocation.x, playerPos.y + spawnLocation.y, playerPos.z + spawnLocation.z);
             
             //rotate to match the player's view vector. why does it look so shit? idk.
             //i wrote this for cassini's space-swimming and it just kinda works ig
@@ -94,9 +96,14 @@ public class WretchedSwineBlockItem extends ItemNameBlockItem {
             RigidBodyHandle handle = physicsSystem.getPhysicsHandle(subLevel);
             
             int timeCharged = this.getUseDuration(stack, entity) - timeLeft;
-            float power = BowItem.getPowerForTime(timeCharged) * 20.00f;
             
-            handle.addLinearAndAngularVelocity(viewVector.mul(power), JOMLConversion.ZERO);
+            Vector3d viewDiff = viewVector.sub(oldViewVector, new Vector3d());
+            
+            double power = BowItem.getPowerForTime(timeCharged) * Math.min(viewDiff.length(), 0.75d) * 12.5d;
+            
+            Vector3d angularVelocity = new Vector3d(0.0d, 1.0d, 0.0d);
+            viewDiff.cross(viewDiff.cross(angularVelocity, angularVelocity), angularVelocity);
+            handle.addLinearAndAngularVelocity(viewVector.add(viewDiff).mul(power), angularVelocity.mul(-0.25d * power));
         }
     }
 
