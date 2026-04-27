@@ -73,10 +73,12 @@ public class WretchedSwineBlockItem extends ItemNameBlockItem {
             assert container != null;
             
             Vec3 playerPos = player.getEyePosition();
-            Vector3d viewVector = JOMLConversion.toJOML(player.getViewVector(1.0f)).mul(ROOT_2);
+            Vector3d viewVector = JOMLConversion.toJOML(player.getViewVector(1.0f));
+            Vector3d oldViewVector = JOMLConversion.toJOML(player.getViewVector(0.0f));
+            Vector3d spawnLocation = viewVector.mul(ROOT_2, new Vector3d());
             
             Pose3d pose = new Pose3d();
-            pose.position().set(playerPos.x + viewVector.x, playerPos.y + viewVector.y, playerPos.z + viewVector.z);
+            pose.position().set(playerPos.x + spawnLocation.x, playerPos.y + spawnLocation.y, playerPos.z + spawnLocation.z);
             
             //rotate to match the player's view vector. why does it look so shit? idk.
             //i wrote this for cassini's space-swimming and it just kinda works ig
@@ -94,9 +96,14 @@ public class WretchedSwineBlockItem extends ItemNameBlockItem {
             RigidBodyHandle handle = physicsSystem.getPhysicsHandle(subLevel);
             
             int timeCharged = this.getUseDuration(stack, entity) - timeLeft;
-            float power = BowItem.getPowerForTime(timeCharged) * 20.00f;
             
-            handle.addLinearAndAngularVelocity(viewVector.mul(power), JOMLConversion.ZERO);
+            Vector3d viewDiff = viewVector.sub(oldViewVector, new Vector3d());
+            
+            double power = BowItem.getPowerForTime(timeCharged) * Math.min(viewDiff.length(), 0.75d) * 12.5d;
+            
+            Vector3d angularVelocity = new Vector3d(0.0d, 1.0d, 0.0d);
+            viewDiff.cross(viewDiff.cross(angularVelocity, angularVelocity), angularVelocity);
+            handle.addLinearAndAngularVelocity(viewVector.add(viewDiff).mul(power), angularVelocity.mul(-0.25d * power));
         }
     }
 
@@ -110,60 +117,10 @@ public class WretchedSwineBlockItem extends ItemNameBlockItem {
         return UseAnim.BOW;
     }
 
-    public void applyForces(final ServerSubLevel subLevel, final Vec3 thrustDirection, final BlockPos blockPos, final double timeStep) {
-        final Vec3 thrust = thrustDirection.scale(timeStep);
-
-        THRUST_POSITION.set(JOMLConversion.atCenterOf(blockPos));
-        THRUST_VECTOR.set(thrust.x, thrust.y, thrust.z);
-
-        final QueuedForceGroup forceGroup = subLevel.getOrCreateQueuedForceGroup(ForceGroups.PROPULSION.get());
-        forceGroup.applyAndRecordPointForce(new Vector3d(THRUST_POSITION), new Vector3d(THRUST_VECTOR));
-    }
-
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
-        
-        if (true) {
-            player.startUsingItem(hand);
-            return InteractionResultHolder.consume(itemstack);
-        }
-        
-        if (!level.isClientSide) {
-
-            ServerSubLevelContainer plotContainer = (ServerSubLevelContainer) SubLevelContainer.getContainer(level);
-
-            Vec3 playerPos = player.getEyePosition();
-
-            Pose3d pose = new Pose3d();
-            pose.position().set(playerPos.x, playerPos.y, playerPos.z);
-
-            SubLevel subLevel = plotContainer.allocateNewSubLevel(pose);
-            subLevel.setName("Jerry");
-
-            LevelPlot plot = subLevel.getPlot();
-
-            ChunkPos center = plot.getCenterChunk();
-            plot.newEmptyChunk(center);
-
-            plot.getEmbeddedLevelAccessor().setBlock(
-                    BlockPos.ZERO,
-                    DoodooBlocks.SWINE.get().defaultBlockState(),
-                    3
-            );
-
-            subLevel.updateLastPose();
-
-            // fucking kill me. guy I have no idea how to apply physics.
-            // I looked at SablePhysicsCommands.executeLinearImpulseCommand, I looked at Thrusters in both cugmod and cassini and they both do weird stuff I can't use.
-            // KILL MEEEEE
-            SubLevelPhysicsSystem system = SubLevelPhysicsSystem.get(level);
-            system.getPhysicsHandle((ServerSubLevel) subLevel)
-                    .applyLinearImpulse(
-                            JOMLConversion.toJOML(new Vec3(20, 1, 0))
-                    );
-        }
-
-        return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide);
+        player.startUsingItem(hand);
+        return InteractionResultHolder.consume(itemstack);
     }
 }

@@ -11,6 +11,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.storage.loot.LootTable;
+import org.bowserfartgif.cugmod.registry.DoodooCreativeModeTab;
 import org.bowserfartgif.cugmod.registry.data.DoodooBlockTagsProvider;
 import org.bowserfartgif.cugmod.registry.data.DoodooItemTagsProvider;
 import org.bowserfartgif.cugmod.registry.data.DoodooLanguageProvider;
@@ -121,6 +122,8 @@ public class BlockBuilder<B extends Block> {
         
         private Iterable<TagKey<Item>> tags = Set.of();
         
+        private boolean addToCreativeTab = true;
+        
         @Nullable
         private String lang = null;
         
@@ -148,6 +151,11 @@ public class BlockBuilder<B extends Block> {
             return this;
         }
         
+        public ItemBuilder<I> addToCreativeTab(boolean shouldAdd) {
+            this.addToCreativeTab = shouldAdd;
+            return this;
+        }
+        
         public BlockBuilder<B> endItem() {
             return BlockBuilder.this;
         }
@@ -158,6 +166,9 @@ public class BlockBuilder<B extends Block> {
                 if (this.lang != null) {
                     DoodooLanguageProvider.addItemTranslation(item, this.lang);
                 }
+            }
+            if (this.addToCreativeTab) {
+                DoodooCreativeModeTab.addTabItem(item);
             }
             for (TagKey<Item> tag : this.tags) {
                 DoodooItemTagsProvider.addItemTag(tag, item);
