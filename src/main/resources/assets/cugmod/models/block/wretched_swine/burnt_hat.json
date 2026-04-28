@@ -5,7 +5,7 @@
 	"textures": {
 		"0": "cugmod:block/wretched_swine",
 		"1": "cugmod:block/swine_hat",
-		"particle": "cugmod:block/wretched_swine"
+		"particle": "cugmod:block/particles/boner"
 	},
 	"elements": [
 		{
