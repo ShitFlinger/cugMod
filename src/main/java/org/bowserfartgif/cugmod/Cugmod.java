@@ -1,6 +1,8 @@
 package org.bowserfartgif.cugmod;
 
 import com.mojang.logging.LogUtils;
+import foundry.veil.api.event.VeilRenderLevelStageEvent;
+import foundry.veil.platform.VeilEventPlatform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -34,6 +36,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.bowserfartgif.cugmod.content.harpoon.HarpoonEntityRenderer;
 import org.bowserfartgif.cugmod.content.harpoon.HarpoonGunItem;
 import org.bowserfartgif.cugmod.content.harpoon.HarpoonOwner;
+import org.bowserfartgif.cugmod.content.harpoon.rope.client.RopeRenderer;
 import org.bowserfartgif.cugmod.registry.*;
 import org.bowserfartgif.cugmod.registry.data.DoodooBlockTagsProvider;
 import org.bowserfartgif.cugmod.registry.data.DoodooItemTagsProvider;
@@ -110,6 +113,15 @@ public class Cugmod {
             registerBlockRenderLayers();
             registerItemProperties();
             registerEntityRenderers();
+            
+            VeilEventPlatform.INSTANCE.onVeilRenderLevelStage((stage, levelRenderer, bufferSource, matrixStack, frustumMatrix, projectionMatrix, renderTick, deltaTracker, camera, frustum) -> {
+                if (stage != VeilRenderLevelStageEvent.Stage.AFTER_ENTITIES) {
+                    return;
+                }
+                
+                RopeRenderer.renderRopes(bufferSource, Minecraft.getInstance().level);
+                bufferSource.endBatch(RenderType.lines());
+            });
         }
         
         private static void registerBlockRenderLayers() {

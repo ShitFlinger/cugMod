@@ -5,6 +5,9 @@ import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
 import dev.ryanhcode.sable.api.sublevel.SubLevelTrackingPlugin;
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import dev.ryanhcode.sable.sublevel.system.SubLevelPhysicsSystem;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
+import it.unimi.dsi.fastutil.objects.ObjectLists;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerLevel;
@@ -15,7 +18,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -23,7 +25,8 @@ import java.util.UUID;
 public class ServerRopeManager implements SubLevelTrackingPlugin {
     
     private final ServerLevel serverLevel;
-    private final List<ServerRope> ropes = new ArrayList<>();
+    private final ObjectList<ServerRope> ropes = new ObjectArrayList<>();
+    private final List<ServerRope> ropesView = ObjectLists.unmodifiable(this.ropes);
     
     public ServerRopeManager(ServerLevel serverLevel) {
         this.serverLevel = serverLevel;
@@ -54,6 +57,10 @@ public class ServerRopeManager implements SubLevelTrackingPlugin {
         }
         
         return players;
+    }
+    
+    public List<ServerRope> getRopes() {
+        return this.ropesView;
     }
     
     @Override

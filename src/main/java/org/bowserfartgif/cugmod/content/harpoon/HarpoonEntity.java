@@ -94,9 +94,9 @@ public class HarpoonEntity extends AbstractArrow implements RopeAttachmentEntity
             Vector3dc lastPoint = this.ropeHandle.lastPoint();
             Vector3dc attachmentPos = this.ropeHandle.endAttachment();
             double distance = attachmentPos.distance(lastPoint);
-            int newPoints = (int) (distance);
+            float newPoints = (int) (distance/1.5f);
             if (newPoints > 0) {
-                Vector3d direction = attachmentPos.sub(lastPoint, new Vector3d()).normalize();
+                Vector3d direction = attachmentPos.sub(lastPoint, new Vector3d()).normalize(1.5f);
                 Vector3d newPoint = new Vector3d(lastPoint);
                 for (int i = 0; i < newPoints; i++) {
                     this.ropeHandle.addPoint(newPoint.add(direction));

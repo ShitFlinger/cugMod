@@ -27,6 +27,7 @@ public class ServerRope extends RopePhysicsObject {
         if (this.isActive() && this.handle != null) {
             this.startAttachmentPoint.tick(this.handle);
             this.endAttachmentPoint.tick(this.handle);
+            this.updatePose();
         }
         
     }
