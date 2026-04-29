@@ -20,8 +20,10 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -61,7 +63,7 @@ import org.joml.Vector3d;
 import java.util.List;
 import java.util.Objects;
 
-public class WretchedSwineBlock extends Block implements EntityBlock, BlockWithSubLevelCollisionCallback {
+public class WretchedSwineBlock extends Block implements EntityBlock, BlockWithSubLevelCollisionCallback, Equipable {
 
     public static final VoxelShape SHAPE = Block.box(1, 0, 1, 15, 14, 15);
     
@@ -182,7 +184,12 @@ public class WretchedSwineBlock extends Block implements EntityBlock, BlockWithS
         BoundingBox3ic bounds = subLevel.getPlot().getBoundingBox();
         return bounds != null && bounds.minX() == bounds.maxX() && bounds.minY() == bounds.maxY() && bounds.minZ() == bounds.maxZ();
     }
-    
+
+    @Override
+    public EquipmentSlot getEquipmentSlot() {
+        return EquipmentSlot.HEAD;
+    }
+
     public enum Mood implements StringRepresentable {
         HAPPY("wretched"),
         HURT("hurt"),

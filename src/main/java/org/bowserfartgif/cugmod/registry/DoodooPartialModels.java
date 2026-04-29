@@ -9,6 +9,8 @@ public class DoodooPartialModels {
 
     public static final PartialModel
             FLAPPYBIT = block("control/wing/flappybit");
+    public static final PartialModel
+            THRUSTER_GLOW = block("thruster/thruster_glow");
 
     private DoodooPartialModels() {
     }
