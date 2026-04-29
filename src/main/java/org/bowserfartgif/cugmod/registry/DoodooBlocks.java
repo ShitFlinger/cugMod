@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.storage.loot.LootTable;
-import org.bowserfartgif.cugmod.content.control.joints.HingeBlock;
+//import org.bowserfartgif.cugmod.content.control.joints.HingeBlock;
 import org.bowserfartgif.cugmod.content.control.wing.CamberedWingBlock;
 import org.bowserfartgif.cugmod.content.control.wing.ControlSurfaceBlock;
 import org.bowserfartgif.cugmod.content.control.wing.WingBlock;
@@ -101,16 +101,16 @@ public class DoodooBlocks {
             .lang("Wretched Swine").endItem()
             .build();
     
-    public static final RegistryObject<HingeBlock> HINGE = block("hinge", HingeBlock::new)
-            .properties(() -> BlockBehaviour.Properties.of()
-                                .noOcclusion()
-                                .strength(0.2f)
-                                .requiresCorrectToolForDrops()
-                                .sound(SoundType.COPPER))
-            .lang("Hinge")
-            .dropSelf()
-            .simpleItem()
-            .build();
+//    public static final RegistryObject<HingeBlock> HINGE = block("hinge", HingeBlock::new)
+//            .properties(() -> BlockBehaviour.Properties.of()
+//                                .noOcclusion()
+//                                .strength(0.2f)
+//                                .requiresCorrectToolForDrops()
+//                                .sound(SoundType.COPPER))
+//            .lang("Hinge")
+//            .dropSelf()
+//            .simpleItem()
+//            .build();
     
     private static <B extends Block> BlockBuilder<B> block(String name, Function<BlockBehaviour.Properties, B> factory) {
         return new BlockBuilder<>(name, factory);
