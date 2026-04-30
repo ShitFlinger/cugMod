@@ -2,7 +2,9 @@ package org.bowserfartgif.cugmod.content.harpoon.rope.server;
 
 import dev.ryanhcode.sable.api.physics.object.rope.RopeHandle;
 import dev.ryanhcode.sable.api.physics.object.rope.RopePhysicsObject;
+import dev.ryanhcode.sable.sublevel.SubLevel;
 import org.bowserfartgif.cugmod.content.harpoon.RopeAttachmentEntity;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -10,11 +12,14 @@ public class ServerRope extends RopePhysicsObject {
     
     private final ServerRopeAttachmentPoint startAttachmentPoint;
     private final ServerRopeAttachmentPoint endAttachmentPoint;
+    protected ServerRopeManager.RopeHandle managerHandle;
     
     public ServerRope() {
         super(List.of(), -0.5d);
         this.startAttachmentPoint = new ServerRopeAttachmentPoint(RopeHandle.AttachmentPoint.START);
+        this.startAttachmentPoint.parent = this;
         this.endAttachmentPoint = new ServerRopeAttachmentPoint(RopeHandle.AttachmentPoint.END);
+        this.endAttachmentPoint.parent = this;
     }
     
     public ServerRope(RopeAttachmentEntity startAttachment, RopeAttachmentEntity endAttachment) {
@@ -27,9 +32,13 @@ public class ServerRope extends RopePhysicsObject {
         if (this.isActive() && this.handle != null) {
             this.startAttachmentPoint.tick(this.handle);
             this.endAttachmentPoint.tick(this.handle);
-            this.updatePose();
         }
-        
+    }
+    
+    public void physicsTick() {
+        if (this.isActive() && this.handle != null) {
+            this.managerHandle.updatePoints();
+        }
     }
     
     public ServerRopeAttachmentPoint startAttachmentPoint() {
@@ -38,5 +47,8 @@ public class ServerRope extends RopePhysicsObject {
     
     public ServerRopeAttachmentPoint endAttachmentPoint() {
         return this.endAttachmentPoint;
+    }
+    
+    public void onAttachToSublevel(SubLevel subLevel, ServerRopeAttachmentPoint serverRopeAttachmentPoint) {
     }
 }

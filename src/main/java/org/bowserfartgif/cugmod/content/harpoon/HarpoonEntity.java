@@ -2,6 +2,7 @@ package org.bowserfartgif.cugmod.content.harpoon;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -10,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.bowserfartgif.cugmod.content.harpoon.rope.server.HarpoonRope;
 import org.bowserfartgif.cugmod.content.harpoon.rope.server.ServerRopeManager;
 import org.bowserfartgif.cugmod.registry.DoodooEntities;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +30,7 @@ public class HarpoonEntity extends AbstractArrow implements RopeAttachmentEntity
     private static final Vector3dc SLIGHTLY_DOWN = new Vector3d(0.0d, -0.125d, 0.0d);
     
     private double maxLength;
-    private boolean retracting = false;
+    protected boolean retracting = false;
     private ServerRopeManager.RopeHandle ropeHandle;
     
     public HarpoonEntity(EntityType<HarpoonEntity> entityType, Level level) {
@@ -38,7 +40,7 @@ public class HarpoonEntity extends AbstractArrow implements RopeAttachmentEntity
     public HarpoonEntity(ServerLevel level, Entity shooter, double maxLength) {
         super(DoodooEntities.HARPOON.get(), level);
         if (!(shooter instanceof HarpoonOwner)) {
-            throw new IllegalArgumentException("Shooter isnt an HarpoonOwner!");
+            throw new IllegalArgumentException("Shooter isnt a HarpoonOwner!");
         }
         
         this.maxLength = maxLength;
@@ -48,9 +50,14 @@ public class HarpoonEntity extends AbstractArrow implements RopeAttachmentEntity
         this.setPos(x, y, z);
         this.setOwner(shooter);
         if (this.level() instanceof ServerLevel serverLevel) {
-            this.ropeHandle = ServerRopeManager.getManager(serverLevel).createRope(this, this.getHarpoonOwner());
+            HarpoonRope harpoonRope = new HarpoonRope(this.getHarpoonOwner(), this);
+            this.ropeHandle = ServerRopeManager.getManager(serverLevel).addRope(harpoonRope);
         }
         
+    }
+    
+    public boolean isRetracting() {
+        return this.retracting;
     }
     
     @Override
@@ -87,20 +94,6 @@ public class HarpoonEntity extends AbstractArrow implements RopeAttachmentEntity
             double dist = Math.sqrt(distSquared);
             if (this.maxLength < dist) {
                 this.retract();
-            }
-        }
-        
-        if (this.ropeHandle != null && !(this.inGround || this.retracting)) {
-            Vector3dc lastPoint = this.ropeHandle.lastPoint();
-            Vector3dc attachmentPos = this.ropeHandle.endAttachment();
-            double distance = attachmentPos.distance(lastPoint);
-            float newPoints = (int) (distance/1.5f);
-            if (newPoints > 0) {
-                Vector3d direction = attachmentPos.sub(lastPoint, new Vector3d()).normalize(1.5f);
-                Vector3d newPoint = new Vector3d(lastPoint);
-                for (int i = 0; i < newPoints; i++) {
-                    this.ropeHandle.addPoint(newPoint.add(direction));
-                }
             }
         }
         
@@ -177,5 +170,10 @@ public class HarpoonEntity extends AbstractArrow implements RopeAttachmentEntity
     @Override
     public Vector3dc cugMod$getAttachmentPoint() {
         return SLIGHTLY_DOWN;
+    }
+    
+    @Override
+    public boolean cugMod$shouldUpdateAttachment() {
+        return !this.onGround();
     }
 }

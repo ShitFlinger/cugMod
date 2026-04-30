@@ -21,6 +21,7 @@ public class ServerRopeAttachmentPoint {
     
     private ServerLevel serverLevel;
     private RopeAttachmentEntity attachmentEntity;
+    protected ServerRope parent;
     
     public ServerRopeAttachmentPoint(RopeHandle.AttachmentPoint attachmentPoint) {
         this.attachmentPoint = attachmentPoint;
@@ -44,7 +45,10 @@ public class ServerRopeAttachmentPoint {
             return;
         }
         
-        this.updatePosition();
+        if (this.attachmentEntity.cugMod$shouldUpdateAttachment()) {
+            this.updatePosition();
+        }
+        
         EntityStickExtension stickyEntity = (EntityStickExtension) this.attachmentEntity;
         Vec3 plotPos = stickyEntity.sable$getPlotPosition();
         ServerSubLevel subLevel = null;
@@ -61,6 +65,8 @@ public class ServerRopeAttachmentPoint {
         Vec3 pos = stickyEntity.sable$getPlotPosition();
         if (pos == null) {
             pos = ((Entity) this.attachmentEntity).position();
+        } else {
+            this.parent.onAttachToSublevel(Sable.HELPER.getContaining(this.serverLevel, pos), this);
         }
         JOMLConversion.toJOML(pos, this.position).add(this.attachmentEntity.cugMod$getAttachmentPoint());
     }

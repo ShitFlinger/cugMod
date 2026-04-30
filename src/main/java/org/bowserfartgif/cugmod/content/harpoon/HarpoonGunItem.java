@@ -1,10 +1,6 @@
 package org.bowserfartgif.cugmod.content.harpoon;
 
 import dev.ryanhcode.sable.Sable;
-import dev.ryanhcode.sable.companion.math.JOMLConversion;
-import dev.ryanhcode.sable.companion.math.Pose3dc;
-import dev.ryanhcode.sable.mixinterface.clip_overwrite.LevelPoseProviderExtension;
-import dev.ryanhcode.sable.sublevel.SubLevel;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -12,7 +8,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class HarpoonGunItem extends Item {
@@ -28,8 +23,9 @@ public class HarpoonGunItem extends Item {
         HarpoonEntity harpoon = ((HarpoonOwner) player).cugMod$getHarpoon();
         if (harpoon != null) {
             if (level instanceof ServerLevel serverLevel) {
-                if (Sable.HELPER.isInPlotGrid(harpoon)) {
+                if (serverLevel.getEntity(harpoon.getUUID()) == null || Sable.HELPER.isInPlotGrid(harpoon)) {
                     harpoon.discard();
+                    ((HarpoonOwner) player).cugMod$setHarpoon(null);
                 }
                 harpoon.retract();
             }

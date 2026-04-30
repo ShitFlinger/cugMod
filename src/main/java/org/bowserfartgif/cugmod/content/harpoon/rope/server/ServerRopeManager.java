@@ -1,9 +1,11 @@
 package org.bowserfartgif.cugmod.content.harpoon.rope.server;
 
+import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.api.sublevel.ServerSubLevelContainer;
 import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
 import dev.ryanhcode.sable.api.sublevel.SubLevelTrackingPlugin;
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
+import dev.ryanhcode.sable.sublevel.SubLevel;
 import dev.ryanhcode.sable.sublevel.system.SubLevelPhysicsSystem;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
@@ -13,8 +15,10 @@ import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import org.bowserfartgif.cugmod.content.harpoon.RopeAttachmentEntity;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
 
@@ -33,9 +37,7 @@ public class ServerRopeManager implements SubLevelTrackingPlugin {
     }
     
     @ApiStatus.Internal
-    public void init() {
-        ServerSubLevelContainer container = SubLevelContainer.getContainer(this.serverLevel);
-        assert container != null;
+    public void init(@NotNull ServerSubLevelContainer container) {
         container.trackingSystem().addTrackingPlugin(this);
     }
     
@@ -73,18 +75,32 @@ public class ServerRopeManager implements SubLevelTrackingPlugin {
     }
     
     public void tick() {
-        for (ServerRope rope : this.ropes) {
+        for (int i = 0; i < this.ropes.size(); i++) {
+            ServerRope rope = this.ropes.get(i);
             rope.tick();
+        }
+    }
+    
+    public void physicsTick() {
+        for (int i = 0; i < this.ropes.size(); i++) {
+            ServerRope rope = this.ropes.get(i);
+            rope.physicsTick();
         }
     }
     
     public RopeHandle createRope(RopeAttachmentEntity startAttachment, RopeAttachmentEntity endAttachment) {
         ServerRope rope = new ServerRope(startAttachment, endAttachment);
-        rope.addPoint(JOMLConversion.toJOML(((Entity) startAttachment).position()));
-        rope.addPoint(JOMLConversion.toJOML(((Entity) endAttachment).position()));
-        this.ropes.add(rope);
+        return this.addRope(rope);
+    }
+    
+    public RopeHandle addRope(ServerRope rope) {
+        RopeHandle managerHandle = new RopeHandle(rope);
+        rope.managerHandle = managerHandle;
+        managerHandle.addPoint(rope.endAttachmentPoint().getPosition());
+        managerHandle.addPoint(rope.startAttachmentPoint().getPosition());
         SubLevelPhysicsSystem.require(this.serverLevel).addObject(rope);
-        return new RopeHandle(rope);
+        this.ropes.add(rope);
+        return managerHandle;
     }
     
     public class RopeHandle {
@@ -111,12 +127,51 @@ public class ServerRopeManager implements SubLevelTrackingPlugin {
             return this.lastPoint;
         }
         
+        public void updatePoints() {
+            this.rope.updatePose();
+            this.lastPoint.set(this.rope.getPoints().getLast());
+        }
+        
+        public List<Vector3d> getPoints() {
+            return this.rope.getPoints();
+        }
+        
         public Vector3dc startAttachment() {
             return this.rope.startAttachmentPoint().getPosition();
         }
         
+        public Vector3d startAttachmentGlobal() {
+            Vector3d attachment = new Vector3d(this.startAttachment());
+            
+            SubLevel subLevel = Sable.HELPER.getContaining(this.getLevel(), attachment);
+            if (subLevel != null) {
+                subLevel.logicalPose().transformPosition(attachment);
+            }
+            
+            return attachment;
+        }
+        
         public Vector3dc endAttachment() {
             return this.rope.endAttachmentPoint().getPosition();
+        }
+        
+        public Vector3d endAttachmentGlobal() {
+            Vector3d attachment = new Vector3d(this.endAttachment());
+            
+            SubLevel subLevel = Sable.HELPER.getContaining(this.getLevel(), attachment);
+            if (subLevel != null) {
+                subLevel.logicalPose().transformPosition(attachment);
+            }
+            
+            return attachment;
+        }
+        
+        public void removeFirstPoint() {
+            this.rope.removeFirstPoint();
+        }
+        
+        public Level getLevel() {
+            return ServerRopeManager.this.serverLevel;
         }
     }
 }

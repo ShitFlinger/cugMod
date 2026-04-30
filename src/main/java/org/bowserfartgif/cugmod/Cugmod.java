@@ -1,6 +1,10 @@
 package org.bowserfartgif.cugmod;
 
 import com.mojang.logging.LogUtils;
+import dev.ryanhcode.sable.api.sublevel.ServerSubLevelContainer;
+import dev.ryanhcode.sable.neoforge.event.ForgeSablePrePhysicsTickEvent;
+import dev.ryanhcode.sable.neoforge.event.ForgeSableSubLevelContainerReadyEvent;
+import dev.ryanhcode.sable.platform.SableEventPlatform;
 import foundry.veil.api.event.VeilRenderLevelStageEvent;
 import foundry.veil.platform.VeilEventPlatform;
 import net.minecraft.client.Minecraft;
@@ -15,6 +19,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.api.distmarker.Dist;
@@ -37,6 +42,7 @@ import org.bowserfartgif.cugmod.content.harpoon.HarpoonEntityRenderer;
 import org.bowserfartgif.cugmod.content.harpoon.HarpoonGunItem;
 import org.bowserfartgif.cugmod.content.harpoon.HarpoonOwner;
 import org.bowserfartgif.cugmod.content.harpoon.rope.client.RopeRenderer;
+import org.bowserfartgif.cugmod.content.harpoon.rope.server.ServerLevelExtension;
 import org.bowserfartgif.cugmod.registry.*;
 import org.bowserfartgif.cugmod.registry.data.DoodooBlockTagsProvider;
 import org.bowserfartgif.cugmod.registry.data.DoodooItemTagsProvider;
@@ -83,11 +89,22 @@ public class Cugmod {
         modEventBus.addListener(this::addCreative);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
-
+    
     private void commonSetup(final FMLCommonSetupEvent event) {
-
     }
-
+    
+    @SubscribeEvent
+    private void onSubLevelContainerReady(ForgeSableSubLevelContainerReadyEvent event) {
+        if (event.getLevel() instanceof ServerLevel serverLevel) {
+            ((ServerLevelExtension) serverLevel).cugMod$getRopeManager().init(((ServerSubLevelContainer) event.getContainer()));
+        }
+    }
+    
+    @SubscribeEvent
+    private void onPhysicsTick(ForgeSablePrePhysicsTickEvent event) {
+        ((ServerLevelExtension) event.getPhysicsSystem().getLevel()).cugMod$getRopeManager().physicsTick();
+    }
+    
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
     }
     

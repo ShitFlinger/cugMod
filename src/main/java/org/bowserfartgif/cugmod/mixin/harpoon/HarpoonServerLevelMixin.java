@@ -17,8 +17,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
 
 @Mixin(ServerLevel.class)
@@ -30,29 +28,6 @@ public class HarpoonServerLevelMixin implements ServerLevelExtension {
     @Override
     public ServerRopeManager cugMod$getRopeManager() {
         return this.cugMod$ropeManager;
-    }
-    
-    @Inject(method = "<init>", at = @At("TAIL"))
-    private void cugMod$init(
-            MinecraftServer server,
-            Executor dispatcher,
-            LevelStorageSource.LevelStorageAccess levelStorageAccess,
-            ServerLevelData serverLevelData,
-            ResourceKey dimension,
-            LevelStem levelStem,
-            ChunkProgressListener progressListener,
-            boolean isDebug,
-            long biomeZoomSeed,
-            List customSpawners,
-            boolean tickTime,
-            RandomSequences randomSequences,
-            CallbackInfo ci
-    ) {
-        SableEventPlatform.INSTANCE.onSubLevelContainerReady((level, container) -> {
-            if (this.equals(level)) {
-                this.cugMod$ropeManager.init();
-            }
-        });
     }
     
     @Inject(method = "tick", at = @At("HEAD"))
