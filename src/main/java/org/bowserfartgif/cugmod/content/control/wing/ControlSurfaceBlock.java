@@ -53,20 +53,14 @@ public class ControlSurfaceBlock extends Block implements EntityBlock, BlockSubL
         builder.add(FACING);
     }
 
+
     @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos,
                                 Block block, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, level, pos, block, fromPos, isMoving);
-
-        if (!(level.getBlockEntity(pos) instanceof ControlSurfaceBlockEntity be)) return;
-
-        float power = be.getControlSurfaceAngle();
-
-        // Always clear the network first
-        clearReceivedAngles(level, pos, 16);
-
-        // Always propagate, even if 0
-        be.startPropagation();
+        if (level.getBlockEntity(pos) instanceof ControlSurfaceBlockEntity be) {
+            be.onNeighborChanged();
+        }
     }
 
     private void clearReceivedAngles(Level level, BlockPos origin, int depth) {

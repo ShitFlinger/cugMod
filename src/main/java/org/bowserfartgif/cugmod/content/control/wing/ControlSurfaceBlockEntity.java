@@ -25,39 +25,69 @@ public class ControlSurfaceBlockEntity extends BlockEntity {
         if (level == null) return 0f;
         int redstoneLevelAbove = level.getBestNeighborSignal(getBlockPos().above());
         int redstoneLevelBelow = level.getBestNeighborSignal(getBlockPos().below()) * -1;
-        float mult = -1f;
-        return mult * (redstoneLevelAbove + redstoneLevelBelow);
+        return -(redstoneLevelAbove + redstoneLevelBelow);
     }
 
     public float getEffectiveAngle() {
         float own = getControlSurfaceAngle();
-        return own != 0 ? own : receivedAngle;
+        return own != 0f ? own : receivedAngle;
     }
 
-    public void startPropagation() {
-        Set<BlockPos> visited = new HashSet<>();
-        visited.add(getBlockPos().immutable());
-        propagateAngle(getControlSurfaceAngle(), 16, visited);
-    }
+    /**
+     * Called when any neighbor changes. Finds the root of the linkage network
+     * (any block with a direct redstone signal), then does a single flood-fill
+     * to clear and re-propagate in one pass.
+     */
+    public void onNeighborChanged() {
+        if (level == null || level.isClientSide) return;
 
-    void propagateAngle(float angle, int depth, Set<BlockPos> visited) {
-        if (level == null || depth <= 0) return;
+        // Find the network root — a connected surface with direct redstone signal
+        Set<BlockPos> network = new HashSet<>();
+        float sourceAngle = findNetworkAngle(getBlockPos(), network);
 
-        for (Direction direction : Direction.values()) {
-            BlockPos neighborPos = getBlockPos().relative(direction).immutable();
-            if (visited.contains(neighborPos)) continue;
-            BlockEntity neighborBe = level.getBlockEntity(neighborPos);
-
-            if (neighborBe instanceof ControlSurfaceBlockEntity neighbor) {
-                if (neighbor.getControlSurfaceAngle() == 0) {
-                    visited.add(neighborPos);
-                    neighbor.receivedAngle = angle;
-                    neighbor.setChanged();
-                    level.sendBlockUpdated(neighborPos, neighbor.getBlockState(), neighbor.getBlockState(), 3);
-                    neighbor.propagateAngle(angle, depth - 1, visited);
+        // Single pass: set every surface in the network to the found angle
+        for (BlockPos pos : network) {
+            if (level.getBlockEntity(pos) instanceof ControlSurfaceBlockEntity be) {
+                // Root blocks keep their own redstone angle; passive blocks get propagated angle
+                if (be.getControlSurfaceAngle() == 0f) {
+                    be.receivedAngle = sourceAngle;
+                    be.setChanged();
+                    level.sendBlockUpdated(pos, be.getBlockState(), be.getBlockState(), 3);
                 }
             }
         }
+    }
+
+    /**
+     * Flood-fills the connected network of ControlSurfaceBlockEntities,
+     * returning the first direct redstone angle found (or 0 if none).
+     */
+    private float findNetworkAngle(BlockPos start, Set<BlockPos> visited) {
+        float found = 0f;
+        // Use an iterative flood fill to avoid stack overflow on large linkages
+        Set<BlockPos> frontier = new HashSet<>();
+        frontier.add(start);
+
+        while (!frontier.isEmpty()) {
+            Set<BlockPos> next = new HashSet<>();
+            for (BlockPos pos : frontier) {
+                if (!visited.add(pos)) continue;
+                if (!(level.getBlockEntity(pos) instanceof ControlSurfaceBlockEntity be)) continue;
+
+                float own = be.getControlSurfaceAngle();
+                if (own != 0f) found = own;
+
+                for (Direction dir : Direction.values()) {
+                    BlockPos neighbor = pos.relative(dir).immutable();
+                    if (!visited.contains(neighbor) &&
+                            level.getBlockEntity(neighbor) instanceof ControlSurfaceBlockEntity) {
+                        next.add(neighbor);
+                    }
+                }
+            }
+            frontier = next;
+        }
+        return found;
     }
 
     @Override
