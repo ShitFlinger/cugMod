@@ -9,4 +9,6 @@ public interface RopeAttachmentEntity {
     
     boolean cugMod$shouldUpdateAttachment();
     
+    boolean cugMod$shouldAttachToSublevel();
+    
 }

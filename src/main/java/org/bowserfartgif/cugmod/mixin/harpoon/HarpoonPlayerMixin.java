@@ -53,4 +53,8 @@ public abstract class HarpoonPlayerMixin extends LivingEntity implements Harpoon
         this.take(harpoon, 1);
     }
     
+    @Override
+    public boolean cugMod$shouldAttachToSublevel() {
+        return false;
+    }
 }

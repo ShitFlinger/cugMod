@@ -1,5 +1,6 @@
 package org.bowserfartgif.cugmod.content.harpoon;
 
+import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -22,6 +23,7 @@ import org.joml.Vector3d;
 import org.joml.Vector3dc;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 
 @ParametersAreNonnullByDefault
 public class HarpoonEntity extends AbstractArrow implements RopeAttachmentEntity {
@@ -96,6 +98,10 @@ public class HarpoonEntity extends AbstractArrow implements RopeAttachmentEntity
                 this.retract();
             }
         }
+        if (this.retracting) {
+            this.inGround = false;
+            this.applyRetraction();
+        }
         
         super.tick();
     }
@@ -161,10 +167,19 @@ public class HarpoonEntity extends AbstractArrow implements RopeAttachmentEntity
         
         this.retracting = true;
         this.inGround = false;
+    }
+    
+    public void applyRetraction() {
+        List<Vector3d> points = this.ropeHandle.getPoints();
+        int size = points.size();
         
-        Vec3 pos = this.position();
-        Vector3d dirToPlayer = new Vector3d(owner.getX(), owner.getEyeY() - 0.1d, owner.getZ()).sub(pos.x, pos.y, pos.z).normalize();
-        this.shoot(dirToPlayer.x, dirToPlayer.y, dirToPlayer.z, 5.0f, 0.0f);
+        
+        Vector3d attachmentPoint = this.ropeHandle.endAttachmentGlobal();
+        Vector3d secondToLastPoint = points.get(size-2);
+        
+        Vector3d moveDir = secondToLastPoint.sub(attachmentPoint, new Vector3d()).mul(2.0d);
+        
+        this.setDeltaMovement(JOMLConversion.toMojang(moveDir));
     }
     
     @Override
@@ -175,5 +190,10 @@ public class HarpoonEntity extends AbstractArrow implements RopeAttachmentEntity
     @Override
     public boolean cugMod$shouldUpdateAttachment() {
         return !this.onGround();
+    }
+    
+    @Override
+    public boolean cugMod$shouldAttachToSublevel() {
+        return false;
     }
 }

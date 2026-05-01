@@ -66,6 +66,7 @@ public class Cugmod {
         DoodooBlocks.bootstrap();
         DoodooItems.bootstrap();
         DoodooCreativeModeTab.bootstrap();
+        DoodooEntities.bootstrap();
         DoodooBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         NeoForge.EVENT_BUS.register(this);
         modEventBus.addListener(this::addCreative);
@@ -78,7 +79,7 @@ public class Cugmod {
     @SubscribeEvent
     private void onSubLevelContainerReady(ForgeSableSubLevelContainerReadyEvent event) {
         if (event.getLevel() instanceof ServerLevel serverLevel) {
-            ((ServerLevelExtension) serverLevel).cugMod$getRopeManager().init(((ServerSubLevelContainer) event.getContainer()));
+            ((ServerLevelExtension) serverLevel).cugMod$init(((ServerSubLevelContainer) event.getContainer()));
         }
     }
     

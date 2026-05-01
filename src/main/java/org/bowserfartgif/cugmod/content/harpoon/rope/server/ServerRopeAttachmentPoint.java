@@ -51,13 +51,20 @@ public class ServerRopeAttachmentPoint {
         
         EntityStickExtension stickyEntity = (EntityStickExtension) this.attachmentEntity;
         Vec3 plotPos = stickyEntity.sable$getPlotPosition();
+        Vector3d position = new Vector3d(this.position);
         ServerSubLevel subLevel = null;
         if (plotPos != null) {
             subLevel = (ServerSubLevel) Sable.HELPER.getContaining(this.serverLevel, plotPos);
+            JOMLConversion.toJOML(plotPos, position);
         } else if (Sable.HELPER.isInPlotGrid(this.serverLevel, this.position)) {
             subLevel = (ServerSubLevel) Sable.HELPER.getContaining(this.serverLevel, this.position);
         }
-        handle.setAttachment(this.attachmentPoint, this.position, subLevel);
+        if (!this.attachmentEntity.cugMod$shouldAttachToSublevel() && subLevel != null) {
+            subLevel.logicalPose().transformPosition(position);
+            subLevel = null;
+        }
+        handle.setAttachment(this.attachmentPoint, position, subLevel);
+        
     }
     
     private void updatePosition() {
