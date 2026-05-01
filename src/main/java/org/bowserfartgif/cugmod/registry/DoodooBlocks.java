@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.storage.loot.LootTable;
-import org.bowserfartgif.cugmod.content.control.joints.HingeBlock;
+//import org.bowserfartgif.cugmod.content.control.joints.HingeBlock;
 import org.bowserfartgif.cugmod.content.control.wing.CamberedWingBlock;
 import org.bowserfartgif.cugmod.content.control.wing.ControlSurfaceBlock;
 import org.bowserfartgif.cugmod.content.control.wing.WingBlock;
@@ -87,9 +87,6 @@ public class DoodooBlocks {
                                 .sound(DoodooSoundTypes.SWINE))
             .lootTable((block) ->
                                WretchedSwineBlock.addLoot(LootTable.lootTable(), block.get()))
-            .item("wretched_swine", (block, properties) ->
-                    new WretchedSwineBlockItem(block, properties, WretchedSwineBlock.Mood.HAPPY))
-            .lang("Wretched Swine").endItem()
             .item("hurt_swine", (block, properties) ->
                     new WretchedSwineBlockItem(block, properties, WretchedSwineBlock.Mood.HURT))
             .lang("Hurt Swine").endItem()
@@ -99,18 +96,21 @@ public class DoodooBlocks {
             .item("burnt_swine", (block, properties) ->
                     new WretchedSwineBlockItem(block, properties, WretchedSwineBlock.Mood.BURNT))
             .lang("Burnt Swine").endItem()
+            .item("wretched_swine", (block, properties) ->
+                    new WretchedSwineBlockItem(block, properties, WretchedSwineBlock.Mood.HAPPY))
+            .lang("Wretched Swine").endItem()
             .build();
     
-    public static final RegistryObject<HingeBlock> HINGE = block("hinge", HingeBlock::new)
-            .properties(() -> BlockBehaviour.Properties.of()
-                                .noOcclusion()
-                                .strength(0.2f)
-                                .requiresCorrectToolForDrops()
-                                .sound(SoundType.COPPER))
-            .lang("Hinge")
-            .dropSelf()
-            .simpleItem()
-            .build();
+//    public static final RegistryObject<HingeBlock> HINGE = block("hinge", HingeBlock::new)
+//            .properties(() -> BlockBehaviour.Properties.of()
+//                                .noOcclusion()
+//                                .strength(0.2f)
+//                                .requiresCorrectToolForDrops()
+//                                .sound(SoundType.COPPER))
+//            .lang("Hinge")
+//            .dropSelf()
+//            .simpleItem()
+//            .build();
     
     private static <B extends Block> BlockBuilder<B> block(String name, Function<BlockBehaviour.Properties, B> factory) {
         return new BlockBuilder<>(name, factory);

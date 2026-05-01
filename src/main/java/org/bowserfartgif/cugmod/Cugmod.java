@@ -4,7 +4,6 @@ import com.mojang.logging.LogUtils;
 import dev.ryanhcode.sable.api.sublevel.ServerSubLevelContainer;
 import dev.ryanhcode.sable.neoforge.event.ForgeSablePrePhysicsTickEvent;
 import dev.ryanhcode.sable.neoforge.event.ForgeSableSubLevelContainerReadyEvent;
-import dev.ryanhcode.sable.platform.SableEventPlatform;
 import foundry.veil.api.event.VeilRenderLevelStageEvent;
 import foundry.veil.platform.VeilEventPlatform;
 import net.minecraft.client.Minecraft;
@@ -13,14 +12,11 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -36,7 +32,6 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.bowserfartgif.cugmod.content.harpoon.HarpoonEntityRenderer;
 import org.bowserfartgif.cugmod.content.harpoon.HarpoonGunItem;
@@ -62,18 +57,6 @@ public class Cugmod {
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB =
-            CREATIVE_MODE_TABS.register("cugmod", () -> CreativeModeTab.builder()
-                    .title(Component.translatable("itemGroup.cugmod"))
-                    .icon(() -> new ItemStack(DoodooBlocks.THRUSTER.get()))
-                    .displayItems((parameters, output) -> {
-                        output.accept(DoodooBlocks.THRUSTER.get().asItem());
-                        output.accept(DoodooBlocks.WING.get().asItem());
-                        output.accept(DoodooBlocks.CAMBERED_WING.get().asItem());
-                        output.accept(DoodooBlocks.CONTROL_SURFACE.get().asItem());
-                    })
-                    .build());
 
     public Cugmod(IEventBus modEventBus, ModContainer modContainer) {
 
@@ -82,9 +65,8 @@ public class Cugmod {
         DoodooSounds.SOUND_EVENTS.register(modEventBus);
         DoodooBlocks.bootstrap();
         DoodooItems.bootstrap();
-        DoodooEntities.bootstrap();
+        DoodooCreativeModeTab.bootstrap();
         DoodooBlockEntities.BLOCK_ENTITIES.register(modEventBus);
-        CREATIVE_MODE_TABS.register(modEventBus);
         NeoForge.EVENT_BUS.register(this);
         modEventBus.addListener(this::addCreative);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);

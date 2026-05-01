@@ -5,7 +5,7 @@
 	"textures": {
 		"0": "cugmod:block/wretched_swine",
 		"1": "cugmod:block/swine_hat",
-		"particle": "cugmod:block/wretched_swine"
+		"particle": "cugmod:block/particles/green"
 	},
 	"elements": [
 		{
@@ -170,8 +170,6 @@
 			"origin": [0, 0, 0],
 			"scope": 0,
 			"color": 0,
-			"stepParentName": "",
-			"backdrop": false,
 			"children": [0, 1, 2, 3, 4]
 		},
 		{
@@ -179,8 +177,6 @@
 			"origin": [8, 8, 8],
 			"scope": 0,
 			"color": 0,
-			"stepParentName": "",
-			"backdrop": false,
 			"children": [5, 6, 7, 8, 9, 10]
 		},
 		11

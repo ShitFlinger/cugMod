@@ -20,12 +20,18 @@ public class DoodooItems {
     public static void bootstrap() {
     }
     
-    // Cugmod(TM) does NOT tolerate making entire classes for 1 Field.
+    // Cugmod(TM) does NOT tolerate making entire classes for 1 Field. - AstralWuzHere
     // Yes it does. - GuyApooye
+    // Okay it's 2 fields now. - AstralWuzHere
     public static final RegistryObject<Item> WRETCHED_DISC = item("wretched_disc", Item::new)
             .properties(() -> new Item.Properties().jukeboxPlayable(DoodooSounds.WRETCHED_DISC_KEY).rarity(
                     Rarity.EPIC).stacksTo(1))
             .lang("Wretched Music Disc")
+            .build();
+
+    public static final RegistryObject<Item> REMOTE_DETONATOR = item("remote_detonator", Item::new)
+            .properties(() -> new Item.Properties().stacksTo(1))
+            .lang("Remote Detonator")
             .build();
     
     public static final RegistryObject<HarpoonGunItem> HARPOON_GUN = item("harpoon_gun", HarpoonGunItem::new)

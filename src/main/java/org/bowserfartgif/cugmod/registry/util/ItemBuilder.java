@@ -5,6 +5,7 @@ import foundry.veil.platform.registry.RegistryObject;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import org.bowserfartgif.cugmod.registry.DoodooCreativeModeTab;
 import org.bowserfartgif.cugmod.registry.data.DoodooItemTagsProvider;
 import org.bowserfartgif.cugmod.registry.data.DoodooLanguageProvider;
 import org.jetbrains.annotations.Nullable;
@@ -25,6 +26,8 @@ public class ItemBuilder<I extends Item> {
     private Supplier<Item.Properties> itemProperties = Item.Properties::new;
     
     private Iterable<TagKey<Item>> tags = Set.of();
+    
+    private boolean addToCreativeTab = true;
     
     @Nullable
     private String lang = null;
@@ -49,6 +52,11 @@ public class ItemBuilder<I extends Item> {
         return this;
     }
     
+    public ItemBuilder<I> addToCreativeTab(boolean shouldAdd) {
+        this.addToCreativeTab = shouldAdd;
+        return this;
+    }
+    
     public RegistryObject<I> build() {
         RegistryObject<I> item = ITEMS.register(this.name, () -> this.factory.apply(this.itemProperties.get()));
         if (this.lang != null) {
@@ -56,6 +64,9 @@ public class ItemBuilder<I extends Item> {
         }
         for (TagKey<Item> tag : this.tags) {
             DoodooItemTagsProvider.addItemTag(tag, item);
+        }
+        if (this.addToCreativeTab) {
+            DoodooCreativeModeTab.addTabItem(item);
         }
         return item;
     }

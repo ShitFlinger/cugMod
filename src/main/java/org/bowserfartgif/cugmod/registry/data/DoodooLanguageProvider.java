@@ -25,6 +25,7 @@ public class DoodooLanguageProvider extends LanguageProvider {
         
         ITEM_LANGS.forEach(this::addItem);
         
+        this.add("itemGroup.cugmod", "Junkyard");
         this.add("item.cugmod.wretched_disc.desc", "Bad Piggies theme - Ilmari Hakkola");
         this.add("lore.cugmod.thruster.line2", "§7It goes pretty fast I think, don't ask me how it works with only a nozzle, though");
     }
