@@ -8,6 +8,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.bowserfartgif.cugmod.registry.DoodooBlockEntities;
 
@@ -17,8 +18,8 @@ import java.util.Set;
 public class ControlSurfaceBlockEntity extends BlockEntity {
     public float receivedAngle = 0f;
 
-    public ControlSurfaceBlockEntity(BlockPos pos, BlockState blockState) {
-        super(DoodooBlockEntities.CONTROL_SURFACE.get(), pos, blockState);
+    public ControlSurfaceBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
     }
 
     public float getControlSurfaceAngle() {

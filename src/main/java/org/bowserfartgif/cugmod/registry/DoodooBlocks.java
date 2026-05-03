@@ -2,6 +2,7 @@ package org.bowserfartgif.cugmod.registry;
 
 import foundry.veil.platform.registry.RegistrationProvider;
 import foundry.veil.platform.registry.RegistryObject;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BlockTags;
@@ -84,6 +85,7 @@ public class DoodooBlocks {
                                 .noOcclusion()
                                 .strength(0.2f)
                                 .sound(DoodooSoundTypes.SWINE))
+            .renderType(() -> RenderType::cutout)
             .lootTable((block) ->
                                WretchedSwineBlock.addLoot(LootTable.lootTable(), block.get()))
             .item("hurt_swine", (block, properties) ->

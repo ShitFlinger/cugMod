@@ -8,6 +8,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.LavaFluid;
 import org.bowserfartgif.cugmod.registry.DoodooBlockEntities;
@@ -19,8 +20,8 @@ public class WretchedSwineBlockEntity extends BlockEntity {
     private int fireTicks = 0;
     private boolean fireTickAdded = false;
     
-    public WretchedSwineBlockEntity(BlockPos pos, BlockState blockState) {
-        super(DoodooBlockEntities.SWINE.get(), pos, blockState);
+    public WretchedSwineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
     }
     
     public void tick() {

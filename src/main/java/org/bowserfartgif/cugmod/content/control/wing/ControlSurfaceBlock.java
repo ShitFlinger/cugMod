@@ -167,6 +167,6 @@ public class ControlSurfaceBlock extends Block implements EntityBlock, BlockSubL
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new ControlSurfaceBlockEntity(blockPos, blockState);
+        return DoodooBlockEntities.CONTROL_SURFACE.get().create(blockPos, blockState);
     }
 }

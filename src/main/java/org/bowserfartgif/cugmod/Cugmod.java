@@ -39,6 +39,7 @@ import org.bowserfartgif.cugmod.registry.data.DoodooBlockTagsProvider;
 import org.bowserfartgif.cugmod.registry.data.DoodooItemTagsProvider;
 import org.bowserfartgif.cugmod.registry.data.DoodooLanguageProvider;
 import org.bowserfartgif.cugmod.registry.data.DoodooLootTableProvider;
+import org.bowserfartgif.cugmod.registry.util.BlockBuilder;
 import org.slf4j.Logger;
 import org.bowserfartgif.cugmod.content.propulsion.ThrusterRenderer;
 
@@ -49,7 +50,7 @@ import java.util.concurrent.CompletableFuture;
 @Mod(Cugmod.MODID)
 public class Cugmod {
     public static final String MODID = "cugmod";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public Cugmod(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
@@ -57,7 +58,7 @@ public class Cugmod {
         DoodooBlocks.bootstrap();
         DoodooItems.bootstrap();
         DoodooCreativeModeTab.bootstrap();
-        DoodooBlockEntities.BLOCK_ENTITIES.register(modEventBus);
+        DoodooBlockEntities.bootstrap();
         DoodooParticleTypes.PARTICLE_TYPES.register(modEventBus);
         NeoForge.EVENT_BUS.register(this);
         modEventBus.addListener(this::addCreative);
@@ -75,49 +76,5 @@ public class Cugmod {
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         LOGGER.info("HELP IVE BEEN TRAPPED IN THE LOGS I CANT GET OUT PLEASE I NEED HELP PLEASE IM SO SCARED");
-    }
-
-    @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ClientModEvents {
-        @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event) {
-            LOGGER.info("HEEELLLPPPPP HELP ME HEELLPPPP PLEASEEEE - I Am Kipti Discord");
-            LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
-            DoodooPartialModels.bootstrap();
-            registerBlockRenderLayers();
-            BlockEntityRenderers.register(DoodooBlockEntities.THRUSTER.get(), ThrusterRenderer::new);
-        }
-
-        private static void registerBlockRenderLayers() {
-            ItemBlockRenderTypes.setRenderLayer(DoodooBlocks.SWINE.get(), RenderType.cutout());
-        }
-
-        @SubscribeEvent
-        public static void registerParticles(RegisterParticleProvidersEvent event) {
-            event.registerSpriteSet(DoodooParticleTypes.THRUSTER_PARTICLE.get(), ThrusterParticle.Provider::new);
-        }
-
-        @SubscribeEvent
-        public static void gatherData(GatherDataEvent event) {
-            DataGenerator generator = event.getGenerator();
-            PackOutput output = generator.getPackOutput();
-            CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
-            ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
-
-            generator.addProvider(event.includeServer(),
-                    new LootTableProvider(output, Set.of(),
-                            List.of(new LootTableProvider.SubProviderEntry(
-                                    DoodooLootTableProvider::new, LootContextParamSets.BLOCK)),
-                            lookupProvider));
-
-            generator.addProvider(event.includeClient(),
-                    new DoodooLanguageProvider(output, "en_us"));
-
-            generator.addProvider(event.includeServer(),
-                    new DoodooBlockTagsProvider(output, lookupProvider, existingFileHelper));
-
-            generator.addProvider(event.includeServer(),
-                    new DoodooItemTagsProvider(output, lookupProvider, existingFileHelper));
-        }
     }
 }

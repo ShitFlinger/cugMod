@@ -2,8 +2,10 @@ package org.bowserfartgif.cugmod.registry.util;
 
 import foundry.veil.platform.registry.RegistrationProvider;
 import foundry.veil.platform.registry.RegistryObject;
+import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectLists;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
@@ -11,6 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.neoforged.fml.loading.FMLEnvironment;
 import org.bowserfartgif.cugmod.registry.DoodooCreativeModeTab;
 import org.bowserfartgif.cugmod.registry.data.DoodooBlockTagsProvider;
 import org.bowserfartgif.cugmod.registry.data.DoodooItemTagsProvider;
@@ -20,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -32,6 +36,14 @@ public class BlockBuilder<B extends Block> {
     
     public static final RegistrationProvider<Block> BLOCKS = RegistrationProvider.get(Registries.BLOCK, MODID);
     public static final RegistrationProvider<Item> ITEMS = RegistrationProvider.get(Registries.ITEM, MODID);
+    
+    private static Map<Supplier<? extends Block>, RenderType> BLOCK_RENDER_TYPES = new Object2ObjectArrayMap<>();
+    
+    public static void registerRenderTypes() {
+        BLOCK_RENDER_TYPES.forEach(
+                (block, renderType) -> ItemBlockRenderTypes.setRenderLayer(block.get(), renderType)
+        );
+    }
     
     private final String name;
     private final Function<BlockBehaviour.Properties, B> factory;
@@ -46,6 +58,8 @@ public class BlockBuilder<B extends Block> {
     private Function<Supplier<B>, LootTable.Builder> lootTable = null;
     @Nullable
     private String lang = null;
+    @Nullable
+    private Supplier<Supplier<RenderType>> renderType = null;
     
     public BlockBuilder(String name, Function<BlockBehaviour.Properties, B> factory) {
         this.name = name;
@@ -54,6 +68,11 @@ public class BlockBuilder<B extends Block> {
     
     public BlockBuilder<B> properties(Supplier<BlockBehaviour.Properties> properties) {
         this.blockProperties = properties;
+        return this;
+    }
+    
+    public BlockBuilder<B> renderType(Supplier<Supplier<RenderType>> renderType) {
+        this.renderType = renderType;
         return this;
     }
     
@@ -108,6 +127,9 @@ public class BlockBuilder<B extends Block> {
         }
         for (TagKey<Block> tag : this.tags) {
             DoodooBlockTagsProvider.addBlockTag(tag, block);
+        }
+        if (this.renderType != null && FMLEnvironment.dist.isClient()) {
+            BLOCK_RENDER_TYPES.put(block, this.renderType.get().get());
         }
         this.items.forEach(item -> item.build(block));
         return block;

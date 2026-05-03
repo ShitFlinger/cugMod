@@ -20,8 +20,8 @@ public class ItemBuilder<I extends Item> {
     
     public static final RegistrationProvider<Item> ITEMS = RegistrationProvider.get(Registries.ITEM, MODID);
     
-    private final Function<Item.Properties, I> factory;
     private final String name;
+    private final Function<Item.Properties, I> factory;
     
     private Supplier<Item.Properties> itemProperties = Item.Properties::new;
     

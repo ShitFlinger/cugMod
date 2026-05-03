@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.bowserfartgif.cugmod.Config;
 import org.bowserfartgif.cugmod.particle_bullshit.ThrusterParticleOptions;
@@ -30,8 +31,8 @@ public class ThrusterBlockEntity extends BlockEntity
         return this;
     }
 
-    public ThrusterBlockEntity(BlockPos pos, BlockState state) {
-        super(DoodooBlockEntities.THRUSTER.get(), pos, state);
+    public ThrusterBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
     }
 
     @Override
