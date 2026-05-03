@@ -51,6 +51,7 @@ public abstract class HarpoonPlayerMixin extends LivingEntity implements Harpoon
     @Override
     public void cugMod$onTouchHarpoon(HarpoonEntity harpoon) {
         this.take(harpoon, 1);
+        harpoon.discard();
     }
     
     @Override

@@ -4,7 +4,9 @@ import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.api.physics.object.rope.RopeHandle;
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import dev.ryanhcode.sable.mixinterface.entity.entities_stick_sublevels.EntityStickExtension;
+import dev.ryanhcode.sable.mixinterface.entity.entity_sublevel_collision.EntityMovementExtension;
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
+import dev.ryanhcode.sable.sublevel.SubLevel;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -68,14 +70,15 @@ public class ServerRopeAttachmentPoint {
     }
     
     private void updatePosition() {
-        EntityStickExtension stickyEntity = (EntityStickExtension) this.attachmentEntity;
-        Vec3 pos = stickyEntity.sable$getPlotPosition();
-        if (pos == null) {
-            pos = ((Entity) this.attachmentEntity).position();
-        } else {
+        EntityMovementExtension movementExtension = (EntityMovementExtension) this.attachmentEntity;
+        SubLevel subLevel = movementExtension.sable$getTrackingSubLevel();
+        Vector3d pos = JOMLConversion.toJOML(((Entity) this.attachmentEntity).position());
+        if (subLevel != null) {
+            subLevel.logicalPose().transformPositionInverse(pos);
             this.parent.onAttachToSublevel(Sable.HELPER.getContaining(this.serverLevel, pos), this);
         }
-        JOMLConversion.toJOML(pos, this.position).add(this.attachmentEntity.cugMod$getAttachmentPoint());
+        this.position.set(pos);
+        this.position.add(this.attachmentEntity.cugMod$getAttachmentPoint());
     }
     
     public RopeHandle.AttachmentPoint getAttachmentPoint() {

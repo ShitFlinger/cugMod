@@ -6,9 +6,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -79,7 +81,7 @@ public class HarpoonEntity extends AbstractArrow implements RopeAttachmentEntity
     @Override
     @NotNull
     protected ItemStack getDefaultPickupItem() {
-        return ItemStack.EMPTY;
+        return Items.ARROW.getDefaultInstance();
     }
     
     @Override
@@ -170,6 +172,11 @@ public class HarpoonEntity extends AbstractArrow implements RopeAttachmentEntity
     }
     
     public void applyRetraction() {
+        Entity owner = this.getOwner();
+        if (owner == null) {
+            return;
+        }
+        
         List<Vector3d> points = this.ropeHandle.getPoints();
         int size = points.size();
         

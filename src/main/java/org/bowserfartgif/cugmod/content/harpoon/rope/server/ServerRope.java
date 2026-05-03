@@ -15,7 +15,7 @@ public class ServerRope extends RopePhysicsObject {
     protected ServerRopeManager.RopeHandle managerHandle;
     
     public ServerRope() {
-        super(List.of(), -0.5d);
+        super(List.of(), 0.05d);
         this.startAttachmentPoint = new ServerRopeAttachmentPoint(RopeHandle.AttachmentPoint.START);
         this.startAttachmentPoint.parent = this;
         this.endAttachmentPoint = new ServerRopeAttachmentPoint(RopeHandle.AttachmentPoint.END);
