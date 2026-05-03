@@ -50,29 +50,14 @@ import java.util.concurrent.CompletableFuture;
 public class Cugmod {
     public static final String MODID = "cugmod";
     private static final Logger LOGGER = LogUtils.getLogger();
-    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
-    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB =
-            CREATIVE_MODE_TABS.register("cugmod", () -> CreativeModeTab.builder()
-                    .title(Component.translatable("itemGroup.cugmod"))
-                    .icon(() -> new ItemStack(DoodooBlocks.THRUSTER.get()))
-                    .displayItems((parameters, output) -> {
-                        output.accept(DoodooBlocks.THRUSTER.get().asItem());
-                        output.accept(DoodooBlocks.WING.get().asItem());
-                        output.accept(DoodooBlocks.CAMBERED_WING.get().asItem());
-                        output.accept(DoodooBlocks.CONTROL_SURFACE.get().asItem());
-                    })
-                    .build());
 
     public Cugmod(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
-        BLOCKS.register(modEventBus);
         DoodooSounds.SOUND_EVENTS.register(modEventBus);
         DoodooBlocks.bootstrap();
         DoodooItems.bootstrap();
+        DoodooCreativeModeTab.bootstrap();
         DoodooBlockEntities.BLOCK_ENTITIES.register(modEventBus);
-        CREATIVE_MODE_TABS.register(modEventBus);
         DoodooParticleTypes.PARTICLE_TYPES.register(modEventBus);
         NeoForge.EVENT_BUS.register(this);
         modEventBus.addListener(this::addCreative);
