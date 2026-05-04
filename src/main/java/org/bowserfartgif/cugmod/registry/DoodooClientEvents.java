@@ -1,7 +1,6 @@
     package org.bowserfartgif.cugmod.registry;
 
     import net.minecraft.client.Minecraft;
-    import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
     import net.minecraft.core.HolderLookup;
     import net.minecraft.data.DataGenerator;
     import net.minecraft.data.PackOutput;
@@ -12,12 +11,12 @@
     import net.neoforged.fml.common.EventBusSubscriber;
     import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
     import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+    import net.neoforged.neoforge.client.event.ModelEvent;
     import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+    import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
     import net.neoforged.neoforge.common.data.ExistingFileHelper;
     import net.neoforged.neoforge.data.event.GatherDataEvent;
     import org.bowserfartgif.cugmod.Cugmod;
-    import org.bowserfartgif.cugmod.content.control.wing.ControlSurfaceBlockEntity;
-    import org.bowserfartgif.cugmod.content.control.wing.ControlSurfaceRenderer;
     import org.bowserfartgif.cugmod.particle_bullshit.ThrusterParticle;
     import org.bowserfartgif.cugmod.registry.data.DoodooBlockTagsProvider;
     import org.bowserfartgif.cugmod.registry.data.DoodooItemTagsProvider;
@@ -37,7 +36,21 @@
             Cugmod.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
             DoodooPartialModels.bootstrap();
             BlockBuilder.registerRenderTypes();
-            DoodooBlockEntityRenderers.register();
+        }
+        
+        @SubscribeEvent
+        public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
+            DoodooBlockEntityRenderers.register(event);
+        }
+        
+        @SubscribeEvent
+        public static void onRegisterClientExtensions(RegisterClientExtensionsEvent event) {
+            DoodooClientExtensions.register(event);
+        }
+        
+        @SubscribeEvent
+        public static void onModifyBakingResult(ModelEvent.ModifyBakingResult event) {
+            DoodooClientExtensions.replaceWithCustomRenderers(event.getModels());
         }
         
         @SubscribeEvent

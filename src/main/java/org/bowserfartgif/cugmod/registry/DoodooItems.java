@@ -9,6 +9,8 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import org.bowserfartgif.cugmod.content.poultry.RemoteDetonatorItem;
+import org.bowserfartgif.cugmod.content.poultry.RemoteDetonatorRenderer;
 import org.bowserfartgif.cugmod.registry.util.BlockBuilder;
 import org.bowserfartgif.cugmod.registry.util.ItemBuilder;
 import org.jetbrains.annotations.Nullable;
@@ -30,13 +32,14 @@ public class DoodooItems {
     // Yes it does. - GuyApooye
     // Okay it's 2 fields now. - AstralWuzHere
     public static final RegistryObject<Item> WRETCHED_DISC = item("wretched_disc", Item::new)
-            .properties(() -> new Item.Properties().jukeboxPlayable(DoodooSounds.WRETCHED_DISC_KEY).rarity(
+            .properties(p -> p.jukeboxPlayable(DoodooSounds.WRETCHED_DISC_KEY).rarity(
                     Rarity.EPIC).stacksTo(1))
             .lang("Wretched Music Disc")
             .build();
 
-    public static final RegistryObject<Item> REMOTE_DETONATOR = item("remote_detonator", Item::new)
-            .properties(() -> new Item.Properties().stacksTo(1))
+    public static final RegistryObject<RemoteDetonatorItem> REMOTE_DETONATOR = item("remote_detonator", RemoteDetonatorItem::new)
+            .properties(p -> p.stacksTo(1))
+            .renderer(() -> RemoteDetonatorRenderer::get)
             .lang("Remote Detonator")
             .build();
     

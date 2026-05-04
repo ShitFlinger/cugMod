@@ -74,7 +74,7 @@ public class WretchedSwineCallback implements BlockSubLevelCollisionCallback {
         
         float volume = 0.4f;
         float pitch = level.random.nextFloat();
-        SoundType soundType = DoodooSoundTypes.SWINE;
+        SoundType soundType = DoodooSoundTypes.SWINE.get();
         SoundEvent sound = soundType.getPlaceSound();
         
         switch (mood) {

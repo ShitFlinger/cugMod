@@ -8,9 +8,10 @@ import org.jetbrains.annotations.ApiStatus;
 public class DoodooPartialModels {
 
     public static final PartialModel
-            FLAPPYBIT = block("control/wing/flappybit");
-    public static final PartialModel
-            THRUSTER_GLOW = block("thruster/thruster_glow");
+            FLAPPYBIT = block("control/wing/flappybit"),
+            THRUSTER_GLOW = block("thruster/thruster_glow"),
+            DETONATOR_BUTTON = item("remote_detonator/button")
+    ;
 
     private DoodooPartialModels() {
     }

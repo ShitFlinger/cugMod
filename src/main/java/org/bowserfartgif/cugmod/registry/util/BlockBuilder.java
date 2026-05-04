@@ -49,9 +49,9 @@ public class BlockBuilder<B extends Block> {
     private final Function<BlockBehaviour.Properties, B> factory;
     
     private final List<ItemBuilder<?>> items = new ObjectArrayList<>();
+    private final BlockBehaviour.Properties blockProperties = BlockBehaviour.Properties.of();
     
-    private Supplier<BlockBehaviour.Properties> blockProperties = BlockBehaviour.Properties::of;
-    
+    private Function<BlockBehaviour.Properties, BlockBehaviour.Properties> properties = Function.identity();
     private Iterable<TagKey<Block>> tags = Set.of();
     
     @Nullable
@@ -66,12 +66,13 @@ public class BlockBuilder<B extends Block> {
         this.factory = factory;
     }
     
-    public BlockBuilder<B> properties(Supplier<BlockBehaviour.Properties> properties) {
-        this.blockProperties = properties;
+    public BlockBuilder<B> properties(Function<BlockBehaviour.Properties, BlockBehaviour.Properties> properties) {
+        this.properties = this.properties.andThen(properties);
         return this;
     }
     
     public BlockBuilder<B> renderType(Supplier<Supplier<RenderType>> renderType) {
+        assert this.renderType == null : "Attempted to set render type twice!";
         this.renderType = renderType;
         return this;
     }
@@ -81,6 +82,7 @@ public class BlockBuilder<B extends Block> {
     }
     
     public BlockBuilder<B> lootTable(Function<Supplier<B>, LootTable.Builder> lootTable) {
+        assert this.lootTable == null : "Attempted to set loot table twice!";
         this.lootTable = lootTable;
         return this;
     }
@@ -105,11 +107,13 @@ public class BlockBuilder<B extends Block> {
     }
     
     public BlockBuilder<B> lang(String lang) {
+        assert this.lang == null : "Attempted to set lang twice!";
         this.lang = lang;
         return this;
     }
     
     public BlockBuilder<B> tags(Iterable<TagKey<Block>> tags) {
+        assert this.tags == null : "Attempted to set tags twice!";
         this.tags = tags;
         return this;
     }
@@ -117,7 +121,7 @@ public class BlockBuilder<B extends Block> {
     public RegistryObject<B> build() {
         RegistryObject<B> block = BLOCKS.register(
                 this.name,
-                () -> this.factory.apply(this.blockProperties.get())
+                () -> this.factory.apply(this.properties.apply(this.blockProperties))
         );
         if (this.lootTable != null) {
             DoodooLootTableProvider.addLootTable(block.getId(), () -> this.lootTable.apply(block));
@@ -140,10 +144,10 @@ public class BlockBuilder<B extends Block> {
         private final String name;
         private final BiFunction<B, Item.Properties, I> factory;
         
-        private Supplier<Item.Properties> itemProperties = Item.Properties::new;
+        private final Item.Properties itemProperties = new Item.Properties();
         
+        private Function<Item.Properties, Item.Properties> properties = Function.identity();
         private Iterable<TagKey<Item>> tags = Set.of();
-        
         private boolean addToCreativeTab = true;
         
         @Nullable
@@ -158,17 +162,19 @@ public class BlockBuilder<B extends Block> {
             this(BlockBuilder.this.name, factory);
         }
         
-        public ItemBuilder<I> properties(Supplier<Item.Properties> properties) {
-            this.itemProperties = properties;
+        public ItemBuilder<I> properties(Function<Item.Properties, Item.Properties> properties) {
+            this.properties = this.properties.andThen(properties);
             return this;
         }
         
         public ItemBuilder<I> lang(String lang) {
+            assert this.lang == null : "Attempted to set lang twice!";
             this.lang = lang;
             return this;
         }
         
         public ItemBuilder<I> tags(Iterable<TagKey<Item>> tags) {
+            assert this.tags == null : "Attempted to set tags twice!";
             this.tags = tags;
             return this;
         }
@@ -183,7 +189,7 @@ public class BlockBuilder<B extends Block> {
         }
         
         private void build(Supplier<B> block) {
-            RegistryObject<I> item = ITEMS.register(this.name, () -> this.factory.apply(block.get(), this.itemProperties.get()));
+            RegistryObject<I> item = ITEMS.register(this.name, () -> this.factory.apply(block.get(), this.properties.apply(this.itemProperties)));
             if (BlockBuilder.this.items.size() > 1) {
                 if (this.lang != null) {
                     DoodooLanguageProvider.addItemTranslation(item, this.lang);

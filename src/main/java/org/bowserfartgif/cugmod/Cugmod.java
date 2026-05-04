@@ -54,7 +54,7 @@ public class Cugmod {
 
     public Cugmod(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
-        DoodooSounds.SOUND_EVENTS.register(modEventBus);
+        DoodooSounds.bootstrap();
         DoodooBlocks.bootstrap();
         DoodooItems.bootstrap();
         DoodooCreativeModeTab.bootstrap();
@@ -68,7 +68,7 @@ public class Cugmod {
     private void commonSetup(final FMLCommonSetupEvent event) {}
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {}
-
+    
     public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }

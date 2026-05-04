@@ -32,7 +32,7 @@ public class DoodooBlocks {
     }
     
     public static final RegistryObject<ThrusterBlock> THRUSTER = block("thruster", ThrusterBlock::new)
-            .properties(() -> BlockBehaviour.Properties.of()
+            .properties(p -> p
                     .noOcclusion()
                     .strength(0.2f)
                     .requiresCorrectToolForDrops()
@@ -44,7 +44,7 @@ public class DoodooBlocks {
             .build();
     
     public static final RegistryObject<WingBlock> WING = block("wing", WingBlock::new)
-            .properties(() -> BlockBehaviour.Properties.of()
+            .properties(p -> p
                     .noOcclusion()
                     .strength(0.2f)
                     .requiresCorrectToolForDrops()
@@ -56,7 +56,7 @@ public class DoodooBlocks {
             .build();
     
     public static final RegistryObject<CamberedWingBlock> CAMBERED_WING = block("cambered_wing", CamberedWingBlock::new)
-            .properties(() -> BlockBehaviour.Properties.of()
+            .properties(p -> p
                     .noOcclusion()
                     .strength(0.2f)
                     .requiresCorrectToolForDrops()
@@ -69,7 +69,7 @@ public class DoodooBlocks {
     
     
     public static final RegistryObject<ControlSurfaceBlock> CONTROL_SURFACE = block("control_surface", ControlSurfaceBlock::new)
-            .properties(() -> BlockBehaviour.Properties.of()
+            .properties(p -> p
                     .noOcclusion()
                     .strength(0.2f)
                     .requiresCorrectToolForDrops()
@@ -81,10 +81,10 @@ public class DoodooBlocks {
             .build();
     
     public static final RegistryObject<WretchedSwineBlock> SWINE = block("wretched_swine", WretchedSwineBlock::new)
-            .properties(() -> BlockBehaviour.Properties.of()
+            .properties(p -> p
                                 .noOcclusion()
                                 .strength(0.2f)
-                                .sound(DoodooSoundTypes.SWINE))
+                                .sound(DoodooSoundTypes.SWINE.get()))
             .renderType(() -> RenderType::cutout)
             .lootTable((block) ->
                                WretchedSwineBlock.addLoot(LootTable.lootTable(), block.get()))

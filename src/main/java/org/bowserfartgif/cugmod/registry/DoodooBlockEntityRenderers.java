@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
 import java.util.List;
 import java.util.function.Function;
@@ -15,14 +16,14 @@ public class DoodooBlockEntityRenderers {
     
     private static final List<TypeAndRendererPair<?>> BLOCK_ENTITY_RENDERERS = new ObjectArrayList<>();
     
-    public static void register() {
+    public static void register(EntityRenderersEvent.RegisterRenderers event) {
         for (TypeAndRendererPair<?> blockEntityRenderer : BLOCK_ENTITY_RENDERERS) {
-            register(blockEntityRenderer);
+            register(blockEntityRenderer, event);
         }
     }
     
-    private static <T extends BlockEntity> void register(TypeAndRendererPair<T> blockEntityRenderer) {
-        BlockEntityRenderers.register(blockEntityRenderer.type.get(), context -> blockEntityRenderer.rendererProvider.get().apply(context));
+    private static <T extends BlockEntity> void register(TypeAndRendererPair<T> blockEntityRenderer, EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(blockEntityRenderer.type.get(), context -> blockEntityRenderer.rendererProvider.get().apply(context));
     }
     
     public static <T extends BlockEntity> void addRenderer(
