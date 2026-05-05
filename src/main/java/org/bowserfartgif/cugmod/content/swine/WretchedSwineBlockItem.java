@@ -80,7 +80,7 @@ public class WretchedSwineBlockItem extends ItemNameBlockItem {
             Vector3d viewDiff = viewVector.sub(oldViewVector, new Vector3d());
             double power = BowItem.getPowerForTime(timeCharged) * Math.min(1.25d * viewDiff.length(), 1.0d);
             
-            if (power < 0.2d) {
+            if (power < 0.1d) {
                 return;
             }
             stack.consume(1, entity);
@@ -105,11 +105,14 @@ public class WretchedSwineBlockItem extends ItemNameBlockItem {
             SubLevelPhysicsSystem physicsSystem = container.physicsSystem();
             RigidBodyHandle handle = physicsSystem.getPhysicsHandle(subLevel);
             
-            power *=  12.5d;
+            power *= 12.5d;
             
             Vector3d angularVelocity = new Vector3d(0.0d, 1.0d, 0.0d);
             viewDiff.cross(viewDiff.cross(angularVelocity, angularVelocity), angularVelocity);
-            handle.addLinearAndAngularVelocity(viewVector.add(viewDiff).mul(power), angularVelocity.mul(-0.25d * power));
+            Vector3d velocity = viewVector.add(viewDiff).mul(power);
+            Vec3 playerVelocity = player.getDeltaMovement();
+            velocity.add(5.0d * playerVelocity.x, 5.0d * playerVelocity.y, 5.0d * playerVelocity.z);
+            handle.addLinearAndAngularVelocity(velocity, angularVelocity.mul(-0.5d * power));
         }
     }
 

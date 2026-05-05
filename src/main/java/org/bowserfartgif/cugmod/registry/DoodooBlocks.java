@@ -2,6 +2,7 @@ package org.bowserfartgif.cugmod.registry;
 
 import foundry.veil.platform.registry.RegistrationProvider;
 import foundry.veil.platform.registry.RegistryObject;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BlockTags;
@@ -9,10 +10,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.storage.loot.LootTable;
-//import org.bowserfartgif.cugmod.content.control.joints.HingeBlock;
 import org.bowserfartgif.cugmod.content.control.wing.CamberedWingBlock;
 import org.bowserfartgif.cugmod.content.control.wing.ControlSurfaceBlock;
 import org.bowserfartgif.cugmod.content.control.wing.WingBlock;
+import org.bowserfartgif.cugmod.content.jesus.JesusBlock;
+import org.bowserfartgif.cugmod.content.poultry.explosive.ExplosivePoultryBlock;
+import org.bowserfartgif.cugmod.content.poultry.red.RedPoultryBlock;
 import org.bowserfartgif.cugmod.content.propulsion.ThrusterBlock;
 import org.bowserfartgif.cugmod.content.swine.WretchedSwineBlock;
 import org.bowserfartgif.cugmod.content.swine.WretchedSwineBlockItem;
@@ -30,9 +33,9 @@ public class DoodooBlocks {
     
     public static void bootstrap() {
     }
-    
+
     public static final RegistryObject<ThrusterBlock> THRUSTER = block("thruster", ThrusterBlock::new)
-            .properties(() -> BlockBehaviour.Properties.of()
+            .properties(p -> p
                     .noOcclusion()
                     .strength(0.2f)
                     .requiresCorrectToolForDrops()
@@ -42,9 +45,20 @@ public class DoodooBlocks {
             .tags(Set.of(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE))
             .simpleItem()
             .build();
+
+    public static final RegistryObject<JesusBlock> JESUS = block("jesus", JesusBlock::new)
+            .properties(p -> p
+                    .noOcclusion()
+                    .strength(0.2f)
+                    .requiresCorrectToolForDrops()
+                    .sound(SoundType.NETHERITE_BLOCK))
+            .lang("Jesus")
+            .dropSelf()
+            .simpleItem()
+            .build();
     
     public static final RegistryObject<WingBlock> WING = block("wing", WingBlock::new)
-            .properties(() -> BlockBehaviour.Properties.of()
+            .properties(p -> p
                     .noOcclusion()
                     .strength(0.2f)
                     .requiresCorrectToolForDrops()
@@ -56,7 +70,7 @@ public class DoodooBlocks {
             .build();
     
     public static final RegistryObject<CamberedWingBlock> CAMBERED_WING = block("cambered_wing", CamberedWingBlock::new)
-            .properties(() -> BlockBehaviour.Properties.of()
+            .properties(p -> p
                     .noOcclusion()
                     .strength(0.2f)
                     .requiresCorrectToolForDrops()
@@ -69,7 +83,7 @@ public class DoodooBlocks {
     
     
     public static final RegistryObject<ControlSurfaceBlock> CONTROL_SURFACE = block("control_surface", ControlSurfaceBlock::new)
-            .properties(() -> BlockBehaviour.Properties.of()
+            .properties(p -> p
                     .noOcclusion()
                     .strength(0.2f)
                     .requiresCorrectToolForDrops()
@@ -81,10 +95,11 @@ public class DoodooBlocks {
             .build();
     
     public static final RegistryObject<WretchedSwineBlock> SWINE = block("wretched_swine", WretchedSwineBlock::new)
-            .properties(() -> BlockBehaviour.Properties.of()
+            .properties(p -> p
                                 .noOcclusion()
-                                .strength(0.2f)
-                                .sound(DoodooSoundTypes.SWINE))
+                                .strength(1.0f, 30.0f)
+                                .sound(DoodooSoundTypes.SWINE.get()))
+            .renderType(() -> RenderType::cutout)
             .lootTable((block) ->
                                WretchedSwineBlock.addLoot(LootTable.lootTable(), block.get()))
             .item("hurt_swine", (block, properties) ->
@@ -101,16 +116,24 @@ public class DoodooBlocks {
             .lang("Wretched Swine").endItem()
             .build();
     
-//    public static final RegistryObject<HingeBlock> HINGE = block("hinge", HingeBlock::new)
-//            .properties(() -> BlockBehaviour.Properties.of()
-//                                .noOcclusion()
-//                                .strength(0.2f)
-//                                .requiresCorrectToolForDrops()
-//                                .sound(SoundType.COPPER))
-//            .lang("Hinge")
-//            .dropSelf()
-//            .simpleItem()
-//            .build();
+    public static final RegistryObject<RedPoultryBlock> RED_POULTRY = block("red_poultry", RedPoultryBlock::new)
+            .properties(p -> p.noOcclusion()
+                                .strength(1.0f, 30.0f))
+            .renderType(() -> RenderType::cutout)
+            .dropSelf()
+            .simpleItem()
+            .lang("Furious Poultry")
+            .build();
+    
+    public static final RegistryObject<ExplosivePoultryBlock> EXPLOSIVE_POULTRY = block("explosive_poultry", ExplosivePoultryBlock::new)
+            .properties(p -> p.noOcclusion()
+                    .strength(1.0f, 30.0f))
+            .renderType(() -> RenderType::cutout)
+            .dropSelf()
+            .simpleItem()
+            .lang("Explosive Poultry")
+            .build();
+
     
     private static <B extends Block> BlockBuilder<B> block(String name, Function<BlockBehaviour.Properties, B> factory) {
         return new BlockBuilder<>(name, factory);

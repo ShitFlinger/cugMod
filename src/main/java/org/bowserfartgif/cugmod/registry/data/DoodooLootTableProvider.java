@@ -22,8 +22,6 @@ import java.util.function.Supplier;
 
 public class DoodooLootTableProvider implements LootTableSubProvider {
     
-    private static final ConstantValue ONE = ConstantValue.exactly(1);
-    
     private static final Map<ResourceLocation, Supplier<LootTable.Builder>> BLOCK_LOOT_TABLES = new Object2ObjectArrayMap<>();
     
     private BiConsumer<ResourceKey<LootTable>, LootTable.Builder> registrar;

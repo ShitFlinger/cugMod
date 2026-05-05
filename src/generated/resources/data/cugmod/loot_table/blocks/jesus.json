@@ -6,11 +6,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "cugmod:hinge"
+          "name": "cugmod:jesus"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "cugmod:blocks/hinge"
+  "random_sequence": "cugmod:blocks/jesus"
 }

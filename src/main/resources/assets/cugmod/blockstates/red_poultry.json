@@ -1,0 +1,8 @@
+{
+	"variants": {
+		"facing=north": { "model": "cugmod:block/poultry/red" },
+		"facing=south": { "model": "cugmod:block/poultry/red", "y": 180 },
+		"facing=east":  { "model": "cugmod:block/poultry/red", "y": 90 },
+		"facing=west":  { "model": "cugmod:block/poultry/red", "y": 270 }
+	}
+}

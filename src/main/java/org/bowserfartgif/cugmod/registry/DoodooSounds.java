@@ -1,18 +1,22 @@
 package org.bowserfartgif.cugmod.registry;
 
+import foundry.veil.platform.registry.RegistrationProvider;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.JukeboxSong;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.bowserfartgif.cugmod.Cugmod;
 
 import java.util.function.Supplier;
 
+import static org.bowserfartgif.cugmod.Cugmod.MODID;
+
 public class DoodooSounds {
 
-    public static final DeferredRegister<SoundEvent> SOUND_EVENTS =
-            DeferredRegister.create(Registries.SOUND_EVENT, "cugmod");
+    public static final RegistrationProvider<SoundEvent> SOUND_EVENTS = RegistrationProvider.get(BuiltInRegistries.SOUND_EVENT, MODID);
 
     public static final Supplier<SoundEvent> THRUSTER =
             register("thruster");
@@ -39,14 +43,13 @@ public class DoodooSounds {
     public static final ResourceKey<JukeboxSong> WRETCHED_DISC_KEY = createSong();
 
     private static ResourceKey<JukeboxSong> createSong() {
-        return ResourceKey.create(Registries.JUKEBOX_SONG, ResourceLocation.fromNamespaceAndPath("cugmod", "wretched_disc"));
+        return ResourceKey.create(Registries.JUKEBOX_SONG, Cugmod.id("wretched_disc"));
     }
 
     private static Supplier<SoundEvent> register(String name) {
-        return SOUND_EVENTS.register(name,
-                () -> SoundEvent.createVariableRangeEvent(
-                        ResourceLocation.fromNamespaceAndPath("cugmod", name)
-                )
-        );
+        return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(Cugmod.id(name)));
+    }
+    
+    public static void bootstrap() {
     }
 }

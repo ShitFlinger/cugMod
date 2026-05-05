@@ -62,7 +62,7 @@ public class ThrusterBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new ThrusterBlockEntity(blockPos, blockState);
+        return DoodooBlockEntities.THRUSTER.get().create(blockPos, blockState);
     }
 
     @Override

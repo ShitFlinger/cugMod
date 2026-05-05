@@ -25,6 +25,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -67,7 +68,7 @@ public class WretchedSwineBlock extends Block implements EntityBlock, BlockWithS
 
     public static final VoxelShape SHAPE = Block.box(1, 0, 1, 15, 14, 15);
     
-    public static final DirectionProperty FACING = BlockStateProperties.FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<Mood> MOOD = EnumProperty.create("mood", Mood.class);
     public static final BooleanProperty HAT = BooleanProperty.create("hat");
 
@@ -83,21 +84,16 @@ public class WretchedSwineBlock extends Block implements EntityBlock, BlockWithS
         return SHAPE;
     }
     
-    //shift ameks place directionr eversed, i guess ill keep this
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context){
         Direction normal = context.getHorizontalDirection().getOpposite();
-        if (context.getPlayer() != null && context.getPlayer().isShiftKeyDown()){
-            normal = normal.getOpposite();
-        }
-        
         return this.defaultBlockState().setValue(FACING, normal);
     }
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (stack.is(Tags.Items.MUSIC_DISCS)) {
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 stack.consume(1, player);
                 player.addItem(DoodooItems.WRETCHED_DISC.get().getDefaultInstance());
 
@@ -105,8 +101,17 @@ public class WretchedSwineBlock extends Block implements EntityBlock, BlockWithS
             level.playSound(player, pos, DoodooSounds.MONCH.get(), SoundSource.BLOCKS, 1, 1);
 
             return ItemInteractionResult.SUCCESS;
+        } else if (stack.is(Items.PORKCHOP)) {
+            if (state.getValue(MOOD) == Mood.HURT && stack.is(Items.PORKCHOP)) {
+                stack.consume(1, player);
+                level.setBlockAndUpdate(pos, state.setValue(MOOD, Mood.HAPPY));
+            } else if (state.getValue(MOOD) == Mood.BURNT && stack.is(Items.PORKCHOP)) {
+                stack.consume(1, player);
+                level.setBlockAndUpdate(pos, state.setValue(MOOD, Mood.HURT));
+            }
+            return ItemInteractionResult.SUCCESS;
         }
-
+        
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 
