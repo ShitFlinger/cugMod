@@ -80,7 +80,7 @@ public class WretchedSwineBlockItem extends ItemNameBlockItem {
             Vector3d viewDiff = viewVector.sub(oldViewVector, new Vector3d());
             double power = BowItem.getPowerForTime(timeCharged) * Math.min(1.25d * viewDiff.length(), 1.0d);
             
-            if (power < 0.2d) {
+            if (power < 0.1d) {
                 return;
             }
             stack.consume(1, entity);

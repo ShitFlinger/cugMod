@@ -1,0 +1,12 @@
+{
+	"parent": "block/block",
+	"loader": "neoforge:obj",
+	"flip_v": true,
+	"mtl_override": "cugmod:models/block/jesus/jesus.mtl",
+	"model": "cugmod:models/block/jesus/jesusmodel.obj",
+	"textures": {
+		"jesushchrist": "cugmod:block/jesushchrist",
+		"m_11b9bd7f-3a81-f4a2-95f9-306382e08b70": "cugmod:block/jesushchrist",
+		"particle": "cugmod:block/jesushchrist"
+	}
+}

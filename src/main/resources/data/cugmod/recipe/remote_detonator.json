@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "item": "minecraft:polished_tuff"
+    },
+    "T": {
+      "item": "minecraft:redstone_torch"
+    },
+    "B": {
+      "item": "minecraft:stone_button"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    "PPT",
+    "PBP",
+    "PRP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "cugmod:remote_detonator"
+  }
+}

@@ -13,6 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.bowserfartgif.cugmod.content.poultry.PoultryBlock;
 import org.bowserfartgif.cugmod.content.poultry.PoultryManager;
 import org.bowserfartgif.cugmod.registry.DoodooDataComponents;
 import org.joml.Vector3d;
@@ -48,8 +49,8 @@ public class RemoteDetonatorItem extends Item {
         }
         Map<BlockPos, SubLevel> birds = PoultryManager.getBirdsNear(
                 level,
-                JOMLConversion.toJOML(entity.getEyePosition()),
-                JOMLConversion.toJOML(entity.getViewVector(1.0f)),
+                JOMLConversion.toJOML(entity.getEyePosition(0.5f)),
+                JOMLConversion.toJOML(entity.getViewVector(0.5f)),
                 PoultryManager.BIAS,
                 1.0f
         );
@@ -63,8 +64,9 @@ public class RemoteDetonatorItem extends Item {
                 subLevel.logicalPose().transformPosition(blockPos);
             }
             
-            level.removeBlock(block, false);
-            level.explode(entity, blockPos.x, blockPos.y, blockPos.z, 5.0f, Level.ExplosionInteraction.MOB);
+            if (level.getBlockState(block).getBlock() instanceof PoultryBlock poultryBlock) {
+                poultryBlock.doSomething(level, block, entity, blockPos, subLevel);
+            }
         });
     }
     

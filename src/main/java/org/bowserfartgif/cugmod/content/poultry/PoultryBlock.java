@@ -9,8 +9,14 @@ import dev.ryanhcode.sable.sublevel.SubLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Equipable;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -21,11 +27,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.bowserfartgif.cugmod.content.swine.WretchedSwineBlock;
 import org.bowserfartgif.cugmod.registry.DoodooBlockEntities;
+import org.bowserfartgif.cugmod.registry.DoodooBlocks;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3d;
 
 import java.util.List;
 
@@ -33,7 +42,7 @@ public abstract class PoultryBlock extends Block implements EntityBlock, Equipab
     
     public static final VoxelShape SHAPE = Block.box(1, 0, 1, 15, 14, 15);
     
-    public static final DirectionProperty FACING = BlockStateProperties.FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     
     public PoultryBlock(Properties properties) {
         super(properties);
@@ -108,4 +117,6 @@ public abstract class PoultryBlock extends Block implements EntityBlock, Equipab
         }
         super.onRemove(state, level, pos, newState, movedByPiston);
     }
+    
+    public abstract void doSomething(Level level, BlockPos block, Entity entity, Vector3d blockPos, SubLevel subLevel);
 }

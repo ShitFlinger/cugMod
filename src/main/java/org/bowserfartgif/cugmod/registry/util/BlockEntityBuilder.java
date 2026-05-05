@@ -44,11 +44,13 @@ public class BlockEntityBuilder<BE extends BlockEntity> {
     
     @SafeVarargs // makes the method sus and final bruh. but needed to not have 1000 warnings.
     public final BlockEntityBuilder<BE> validBlocks(Supplier<? extends Block>... blocks) {
+        assert this.validBlocks.isEmpty() : "Attempted to set valid blocks twice!";
         this.validBlocks = Set.of(blocks);
         return this;
     }
     
     public BlockEntityBuilder<BE> dataType(Type<?> dataType) {
+        assert this.validBlocks == null : "Attempted to set data type twice!";
         this.dataType = dataType;
         return this;
     }

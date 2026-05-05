@@ -13,6 +13,8 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import org.bowserfartgif.cugmod.content.control.wing.CamberedWingBlock;
 import org.bowserfartgif.cugmod.content.control.wing.ControlSurfaceBlock;
 import org.bowserfartgif.cugmod.content.control.wing.WingBlock;
+import org.bowserfartgif.cugmod.content.jesus.JesusBlock;
+import org.bowserfartgif.cugmod.content.poultry.explosive.ExplosivePoultryBlock;
 import org.bowserfartgif.cugmod.content.poultry.red.RedPoultryBlock;
 import org.bowserfartgif.cugmod.content.propulsion.ThrusterBlock;
 import org.bowserfartgif.cugmod.content.swine.WretchedSwineBlock;
@@ -44,7 +46,7 @@ public class DoodooBlocks {
             .simpleItem()
             .build();
 
-    public static final RegistryObject<Block> JESUS = block("jesus", Block::new)
+    public static final RegistryObject<JesusBlock> JESUS = block("jesus", JesusBlock::new)
             .properties(p -> p
                     .noOcclusion()
                     .strength(0.2f)
@@ -121,6 +123,15 @@ public class DoodooBlocks {
             .dropSelf()
             .simpleItem()
             .lang("Furious Poultry")
+            .build();
+    
+    public static final RegistryObject<ExplosivePoultryBlock> EXPLOSIVE_POULTRY = block("explosive_poultry", ExplosivePoultryBlock::new)
+            .properties(p -> p.noOcclusion()
+                    .strength(1.0f, 30.0f))
+            .renderType(() -> RenderType::cutout)
+            .dropSelf()
+            .simpleItem()
+            .lang("Explosive Poultry")
             .build();
 
     
