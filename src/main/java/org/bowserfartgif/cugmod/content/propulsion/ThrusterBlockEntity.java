@@ -7,11 +7,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.bowserfartgif.cugmod.Config;
+import org.bowserfartgif.cugmod.particle_bullshit.ThrusterParticleOptions;
 import org.bowserfartgif.cugmod.registry.DoodooBlockEntities;
+import org.bowserfartgif.cugmod.registry.DoodooParticleTypes;
 
 public class ThrusterBlockEntity extends BlockEntity
         implements BlockEntitySubLevelPropellerActor, BlockSubLevelAssemblyListener, BlockEntityPropeller {
@@ -27,8 +31,8 @@ public class ThrusterBlockEntity extends BlockEntity
         return this;
     }
 
-    public ThrusterBlockEntity(BlockPos pos, BlockState state) {
-        super(DoodooBlockEntities.THRUSTER.get(), pos, state);
+    public ThrusterBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
     }
 
     @Override
@@ -63,15 +67,21 @@ public class ThrusterBlockEntity extends BlockEntity
 
     public static void tick(Level level, BlockPos pos, BlockState state, ThrusterBlockEntity be) {
         Direction dir = state.getValue(ThrusterBlock.FACING).getOpposite();
-        float particleSpeed = 1f;
+        double particleSpeed = 1 * be.getPowerModifier();
         if (level.isClientSide && state.getValue(ThrusterBlock.POWERED)) {
-            level.addParticle(
-                    ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, // particle type
-                    pos.getX() + 0.5 + dir.getStepX(),
-                    pos.getY() + 0.5 + dir.getStepY(),
-                    pos.getZ() + 0.5 + dir.getStepZ(),
-                    dir.getStepX() * particleSpeed, dir.getStepY() * particleSpeed, dir.getStepZ() * particleSpeed// motion
-            );
+            RandomSource random = level.getRandom();
+            for (int i = 0; i < 15; i++) {
+                double spread = 0.4;
+                level.addParticle(
+                        new ThrusterParticleOptions(),
+                        pos.getX() + 0.5 + dir.getStepX() + (random.nextDouble() - 0.5) * spread,
+                        pos.getY() + 0.5 + dir.getStepY() + (random.nextDouble() - 0.5) * spread,
+                        pos.getZ() + 0.5 + dir.getStepZ() + (random.nextDouble() - 0.5) * spread,
+                        dir.getStepX() * particleSpeed,
+                        dir.getStepY() * particleSpeed,
+                        dir.getStepZ() * particleSpeed
+                );
+            }
         }
     }
 

@@ -1,0 +1,33 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"render_type": "cutout",
+	"texture_size": [64, 64],
+	"textures": {
+		"2": "cugmod:block/thruster_on_e"
+	},
+	"elements": [
+		{
+			"name": "glow",
+			"from": [1, 1, 10.125],
+			"to": [15, 15, 10.125],
+			"shade": false,
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 0.125]},
+			"faces": {
+				"north": {"uv": [4, 4.25, 7.5, 7.75], "texture": "#2"},
+				"east": {"uv": [4.5, 4.25, 4.5, 7.75], "texture": "#2"},
+				"south": {"uv": [4.25, 4.25, 7.75, 7.75], "texture": "#2"},
+				"west": {"uv": [6.5, 4.25, 6.5, 7.75], "texture": "#2"},
+				"up": {"uv": [4.25, 6.75, 7.75, 6.75], "texture": "#2"},
+				"down": {"uv": [4.25, 4.75, 7.75, 4.75], "texture": "#2"}
+			}
+		}
+	],
+	"display": {
+		"gui": {
+			"rotation": [30, -135, 0],
+			"scale": [0.625, 0.625, 0.625]
+		}
+	}
+}

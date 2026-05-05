@@ -6,11 +6,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "cugmod:hinge"
+          "name": "cugmod:red_poultry"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "cugmod:blocks/hinge"
+  "random_sequence": "cugmod:blocks/red_poultry"
 }

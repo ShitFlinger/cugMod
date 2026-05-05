@@ -83,14 +83,9 @@ public class WretchedSwineBlock extends Block implements EntityBlock, BlockWithS
         return SHAPE;
     }
     
-    //shift ameks place directionr eversed, i guess ill keep this
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context){
         Direction normal = context.getHorizontalDirection().getOpposite();
-        if (context.getPlayer() != null && context.getPlayer().isShiftKeyDown()){
-            normal = normal.getOpposite();
-        }
-        
         return this.defaultBlockState().setValue(FACING, normal);
     }
 
