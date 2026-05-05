@@ -10,7 +10,10 @@ public class DoodooPartialModels {
     public static final PartialModel
             FLAPPYBIT = block("control/wing/flappybit"),
             THRUSTER_GLOW = block("thruster/thruster_glow"),
-            DETONATOR_BUTTON = item("remote_detonator/button")
+            DETONATOR_MAIN_RED = item("remote_detonator/main_red"),
+            DETONATOR_MAIN_GREEN = item("remote_detonator/main_green"),
+            DETONATOR_BUTTON_RED = item("remote_detonator/button_red"),
+            DETONATOR_BUTTON_GREEN = item("remote_detonator/button_green")
     ;
 
     private DoodooPartialModels() {

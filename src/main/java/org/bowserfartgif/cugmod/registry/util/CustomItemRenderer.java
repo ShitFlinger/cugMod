@@ -22,6 +22,8 @@ public abstract class CustomItemRenderer extends BlockEntityWithoutLevelRenderer
     
     private static final Direction[] directions = Direction.values();
     
+    protected static float[] color = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
+    
     public CustomItemRenderer() {
         super(null, null);
     }
@@ -168,7 +170,7 @@ public abstract class CustomItemRenderer extends BlockEntityWithoutLevelRenderer
         List<BakedQuad> quads = pass.getQuads(null, side, random, null, renderType);
         for (int j = 0; j < quads.size(); j++) {
             BakedQuad quad = quads.get(j);
-            builder.putBulkData(pose, quad, 1.0f, 1.0f, 1.0f, 1.0f, packedLight, packedOverlay);
+            builder.putBulkData(pose, quad, color[0], color[1], color[2], color[3], packedLight, packedOverlay);
         }
     }
 }

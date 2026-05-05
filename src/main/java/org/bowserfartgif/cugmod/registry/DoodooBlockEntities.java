@@ -16,6 +16,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import org.bowserfartgif.cugmod.Cugmod;
 import org.bowserfartgif.cugmod.content.control.wing.ControlSurfaceBlockEntity;
 import org.bowserfartgif.cugmod.content.control.wing.ControlSurfaceRenderer;
+import org.bowserfartgif.cugmod.content.poultry.PoultryBlockEntity;
 import org.bowserfartgif.cugmod.content.propulsion.ThrusterBlockEntity;
 import org.bowserfartgif.cugmod.content.propulsion.ThrusterRenderer;
 import org.bowserfartgif.cugmod.content.swine.WretchedSwineBlockEntity;
@@ -47,6 +48,10 @@ public class DoodooBlockEntities {
     
     public static final RegistryObject<BlockEntityType<WretchedSwineBlockEntity>> SWINE = blockEntity("wretched_swine", WretchedSwineBlockEntity::new)
             .validBlocks(DoodooBlocks.SWINE)
+            .build();
+    
+    public static final RegistryObject<BlockEntityType<PoultryBlockEntity>> POULTRY = blockEntity("furious_poultry", PoultryBlockEntity::new)
+            .validBlocks(DoodooBlocks.RED_POULTRY)
             .build();
     
     

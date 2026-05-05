@@ -59,6 +59,7 @@ public class Cugmod {
         DoodooItems.bootstrap();
         DoodooCreativeModeTab.bootstrap();
         DoodooBlockEntities.bootstrap();
+        DoodooDataComponents.bootstrap();
         DoodooParticleTypes.PARTICLE_TYPES.register(modEventBus);
         NeoForge.EVENT_BUS.register(this);
         modEventBus.addListener(this::addCreative);

@@ -6,18 +6,11 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import org.bowserfartgif.cugmod.content.poultry.RemoteDetonatorItem;
-import org.bowserfartgif.cugmod.content.poultry.RemoteDetonatorRenderer;
-import org.bowserfartgif.cugmod.registry.util.BlockBuilder;
+import org.bowserfartgif.cugmod.content.poultry.detonator.RemoteDetonatorItem;
+import org.bowserfartgif.cugmod.content.poultry.detonator.RemoteDetonatorRenderer;
 import org.bowserfartgif.cugmod.registry.util.ItemBuilder;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static org.bowserfartgif.cugmod.Cugmod.MODID;
 

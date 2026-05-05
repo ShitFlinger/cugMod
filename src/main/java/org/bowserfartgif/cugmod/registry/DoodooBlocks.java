@@ -13,6 +13,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import org.bowserfartgif.cugmod.content.control.wing.CamberedWingBlock;
 import org.bowserfartgif.cugmod.content.control.wing.ControlSurfaceBlock;
 import org.bowserfartgif.cugmod.content.control.wing.WingBlock;
+import org.bowserfartgif.cugmod.content.poultry.red.RedPoultryBlock;
 import org.bowserfartgif.cugmod.content.propulsion.ThrusterBlock;
 import org.bowserfartgif.cugmod.content.swine.WretchedSwineBlock;
 import org.bowserfartgif.cugmod.content.swine.WretchedSwineBlockItem;
@@ -100,6 +101,15 @@ public class DoodooBlocks {
             .item("wretched_swine", (block, properties) ->
                     new WretchedSwineBlockItem(block, properties, WretchedSwineBlock.Mood.HAPPY))
             .lang("Wretched Swine").endItem()
+            .build();
+    
+    public static final RegistryObject<RedPoultryBlock> RED_POULTRY = block("red_poultry", RedPoultryBlock::new)
+            .properties(p -> p.noOcclusion()
+                                .strength(0.5f, 25.0f))
+            .renderType(() -> RenderType::cutout)
+            .dropSelf()
+            .simpleItem()
+            .lang("Furious Poultry")
             .build();
 
     
