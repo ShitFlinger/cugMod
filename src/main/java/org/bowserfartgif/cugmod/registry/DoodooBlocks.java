@@ -84,7 +84,7 @@ public class DoodooBlocks {
     public static final RegistryObject<WretchedSwineBlock> SWINE = block("wretched_swine", WretchedSwineBlock::new)
             .properties(p -> p
                                 .noOcclusion()
-                                .strength(0.2f)
+                                .strength(1.0f, 30.0f)
                                 .sound(DoodooSoundTypes.SWINE.get()))
             .renderType(() -> RenderType::cutout)
             .lootTable((block) ->
@@ -105,7 +105,7 @@ public class DoodooBlocks {
     
     public static final RegistryObject<RedPoultryBlock> RED_POULTRY = block("red_poultry", RedPoultryBlock::new)
             .properties(p -> p.noOcclusion()
-                                .strength(0.5f, 25.0f))
+                                .strength(1.0f, 30.0f))
             .renderType(() -> RenderType::cutout)
             .dropSelf()
             .simpleItem()
