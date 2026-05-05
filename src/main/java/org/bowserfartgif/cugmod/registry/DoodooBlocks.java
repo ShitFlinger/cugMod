@@ -31,7 +31,7 @@ public class DoodooBlocks {
     
     public static void bootstrap() {
     }
-    
+
     public static final RegistryObject<ThrusterBlock> THRUSTER = block("thruster", ThrusterBlock::new)
             .properties(p -> p
                     .noOcclusion()
@@ -41,6 +41,17 @@ public class DoodooBlocks {
             .lang("Thruster")
             .dropSelf()
             .tags(Set.of(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE))
+            .simpleItem()
+            .build();
+
+    public static final RegistryObject<Block> JESUS = block("jesus", Block::new)
+            .properties(p -> p
+                    .noOcclusion()
+                    .strength(0.2f)
+                    .requiresCorrectToolForDrops()
+                    .sound(SoundType.NETHERITE_BLOCK))
+            .lang("Jesus")
+            .dropSelf()
             .simpleItem()
             .build();
     

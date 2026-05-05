@@ -1,0 +1,10 @@
+{
+	"parent": "block/block",
+	"loader": "neoforge:obj",
+	"flip_v": true,
+	"model": "cugmod:models/block/jesusmodel.obj",
+	"textures": {
+		"0": "cugmod:block/jesushchrist",
+		"particle": "cugmod:block/jesushchrist"
+	}
+}
