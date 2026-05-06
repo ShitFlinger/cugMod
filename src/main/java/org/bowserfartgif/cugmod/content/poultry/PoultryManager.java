@@ -19,7 +19,7 @@ public class PoultryManager {
     
     public static final Set<BlockPos> birds = ObjectSets.synchronize(new ObjectOpenHashSet<>());
     
-    public static final double BIAS = 0.3f;
+    public static final double BIAS = 0.5f;
     
     public static Map<BlockPos, SubLevel> getBirdsNear(Level level, Vector3d entityPos, Vector3d viewVector, double bias, float partialTick) {
         Map<BlockPos, SubLevel> birdsNear = new Object2ObjectArrayMap<>();

@@ -29,7 +29,7 @@ public class ExplosivePoultryRenderer implements BlockEntityRenderer<ExplosivePo
         if (be.fuze > 0) {
             float fuze = Mth.lerp(v, be.lastFuze, be.fuze);
             float sin = 0.5f * (Mth.sin(fuze) + 1.0f);
-            float scale = 0.015f * sin;
+            float scale = 0.02f * sin;
             LevelRenderer.addChainedFilledBoxVertices(
                     poseStack, builder,
                     0.0625f-scale, 0.0f-scale, 0.0625f-scale,
