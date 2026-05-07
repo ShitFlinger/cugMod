@@ -2,8 +2,10 @@ package org.bowserfartgif.cugmod.content.poultry.splitting;
 
 import dev.ryanhcode.sable.api.block.BlockWithSubLevelCollisionCallback;
 import dev.ryanhcode.sable.api.physics.callback.BlockSubLevelCollisionCallback;
+import dev.ryanhcode.sable.api.physics.handle.RigidBodyHandle;
 import dev.ryanhcode.sable.api.sublevel.ServerSubLevelContainer;
 import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
+import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import dev.ryanhcode.sable.companion.math.Pose3d;
 import dev.ryanhcode.sable.sublevel.ServerSubLevel;
 import dev.ryanhcode.sable.sublevel.SubLevel;
@@ -57,24 +59,43 @@ public class SplittingPoultryBlock extends PoultryBlock  {
     @Override
     public void doSomething(Level level, BlockPos block, Entity entity, Vector3d blockPos, SubLevel subLevel) {
         if (level.getBlockEntity(block) instanceof SplittingPoultryBlockEntity poultryBlockEntity) {
-            if (level.getBlockState(block).getValue(HAS_CLONED)) return;
+            if (level.getBlockState(block).getValue(HAS_CLONED)) {
+                return;
+            }
 
             BlockState withCloned = level.getBlockState(block).setValue(HAS_CLONED, true);
             level.setBlockAndUpdate(block, withCloned);
 
             ServerSubLevelContainer container = SubLevelContainer.getContainer((ServerLevel) level);
+            assert container != null;
 
             Pose3d pose = new Pose3d();
+            
+            Vector3d right = JOMLConversion.atLowerCornerOf(withCloned.getValue(FACING).getClockWise().getNormal());
+            right.mul(0.5d);
             pose.set(subLevel.logicalPose());
-
-            for (int i = 0; i < 2; i++) {
-                assert container != null;
-                ServerSubLevel clonesubLevel = (ServerSubLevel) container.allocateNewSubLevel(pose);
-                LevelPlot plot = clonesubLevel.getPlot();
+            pose.transformNormal(right);
+            
+            RigidBodyHandle subLevelHandle = RigidBodyHandle.of((ServerSubLevel) subLevel);
+            Vector3d linearVelocity = subLevelHandle.getLinearVelocity(new Vector3d());
+            Vector3d angularVelocity = subLevelHandle.getAngularVelocity(new Vector3d());
+            Vector3d vector3d = new Vector3d();
+            
+            for (int i = -1; i <= 1; i += 2) {
+                pose.set(subLevel.logicalPose());
+                vector3d.zero();
+                right.mul(i, vector3d);
+                pose.position().add(i*right.x, i*right.y, i*right.z);
+                ServerSubLevel cloneSubLevel = (ServerSubLevel) container.allocateNewSubLevel(pose);
+                LevelPlot plot = cloneSubLevel.getPlot();
                 ChunkPos center = plot.getCenterChunk();
                 plot.newEmptyChunk(center);
-
                 plot.getEmbeddedLevelAccessor().setBlock(BlockPos.ZERO, withCloned, 3);
+                
+                RigidBodyHandle cloneHandle = RigidBodyHandle.of(cloneSubLevel);
+                vector3d.mul(10.0d);
+                cloneHandle.addLinearAndAngularVelocity(vector3d.add(linearVelocity), angularVelocity);
+                
             }
         }
     }
