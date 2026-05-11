@@ -54,8 +54,7 @@ public class RemoteDetonatorRenderer extends CustomItemRenderer {
             }
             if (entity != null) {
                 if (entity instanceof LivingEntity livingEntity) {
-                    InteractionHand hand = livingEntity.getUsedItemHand();
-                    hasBirdsNearby = livingEntity.getItemInHand(hand).equals(itemStack);
+                    hasBirdsNearby = livingEntity.getMainHandItem().equals(itemStack) || livingEntity.getOffhandItem().equals(itemStack);
                 }
                 if (hasBirdsNearby) {
                     hasBirdsNearby = PoultryManager.hasBirdsNear(

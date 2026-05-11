@@ -6,6 +6,8 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.bowserfartgif.cugmod.registry.DoodooClientExtensions;
 import org.bowserfartgif.cugmod.registry.DoodooCreativeModeTab;
@@ -82,7 +84,7 @@ public class ItemBuilder<I extends Item> {
         if (this.addToCreativeTab) {
             DoodooCreativeModeTab.addTabItem(item);
         }
-        if (this.customRenderer != null) {
+        if (this.customRenderer != null && FMLEnvironment.dist.isClient()) {
             DoodooClientExtensions.addItemExtensions(
                     item, ItemExtensions.simpleRenderer(this.customRenderer.get())
             );

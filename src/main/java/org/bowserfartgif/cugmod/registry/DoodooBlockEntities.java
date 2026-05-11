@@ -19,6 +19,7 @@ import org.bowserfartgif.cugmod.content.control.wing.ControlSurfaceRenderer;
 import org.bowserfartgif.cugmod.content.poultry.PoultryBlockEntity;
 import org.bowserfartgif.cugmod.content.poultry.explosive.ExplosivePoultryBlockEntity;
 import org.bowserfartgif.cugmod.content.poultry.explosive.ExplosivePoultryRenderer;
+import org.bowserfartgif.cugmod.content.poultry.splitting.SplittingPoultryBlockEntity;
 import org.bowserfartgif.cugmod.content.propulsion.ThrusterBlockEntity;
 import org.bowserfartgif.cugmod.content.propulsion.ThrusterRenderer;
 import org.bowserfartgif.cugmod.content.swine.WretchedSwineBlockEntity;
@@ -55,13 +56,16 @@ public class DoodooBlockEntities {
     public static final RegistryObject<BlockEntityType<PoultryBlockEntity>> POULTRY = blockEntity("furious_poultry", PoultryBlockEntity::new)
             .validBlocks(DoodooBlocks.RED_POULTRY, DoodooBlocks.EXPLOSIVE_POULTRY)
             .build();
-    
+
     public static final RegistryObject<BlockEntityType<ExplosivePoultryBlockEntity>> EXPLOSIVE_POULTRY = blockEntity("explosive_poultry", ExplosivePoultryBlockEntity::new)
             .validBlocks(DoodooBlocks.EXPLOSIVE_POULTRY)
             .renderer(() -> ExplosivePoultryRenderer::new)
             .build();
-    
-    
+
+    public static final RegistryObject<BlockEntityType<SplittingPoultryBlockEntity>> SPLITTING_POULTRY = blockEntity("splitting_poultry", SplittingPoultryBlockEntity::new)
+            .validBlocks(DoodooBlocks.SPLITTING_POULTRY)
+            .build();
+
     private static <BE extends BlockEntity> BlockEntityBuilder<BE> blockEntity(String name, TriFunction<BlockEntityType<BE>, BlockPos, BlockState, BE> factory) {
         return new BlockEntityBuilder<>(name, factory);
     }

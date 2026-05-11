@@ -16,6 +16,7 @@ import org.bowserfartgif.cugmod.content.control.wing.WingBlock;
 import org.bowserfartgif.cugmod.content.jesus.JesusBlock;
 import org.bowserfartgif.cugmod.content.poultry.explosive.ExplosivePoultryBlock;
 import org.bowserfartgif.cugmod.content.poultry.red.RedPoultryBlock;
+import org.bowserfartgif.cugmod.content.poultry.splitting.SplittingPoultryBlock;
 import org.bowserfartgif.cugmod.content.propulsion.ThrusterBlock;
 import org.bowserfartgif.cugmod.content.swine.WretchedSwineBlock;
 import org.bowserfartgif.cugmod.content.swine.WretchedSwineBlockItem;
@@ -124,7 +125,7 @@ public class DoodooBlocks {
             .simpleItem()
             .lang("Furious Poultry")
             .build();
-    
+
     public static final RegistryObject<ExplosivePoultryBlock> EXPLOSIVE_POULTRY = block("explosive_poultry", ExplosivePoultryBlock::new)
             .properties(p -> p.noOcclusion()
                     .strength(1.0f, 30.0f))
@@ -134,7 +135,15 @@ public class DoodooBlocks {
             .lang("Explosive Poultry")
             .build();
 
-    
+    public static final RegistryObject<SplittingPoultryBlock> SPLITTING_POULTRY = block("splitting_poultry", SplittingPoultryBlock::new)
+            .properties(p -> p.noOcclusion()
+                    .strength(1.0f, 30.0f))
+            .renderType(() -> RenderType::cutout)
+            .dropSelf()
+            .simpleItem()
+            .lang("Splitting Poultry")
+            .build();
+
     private static <B extends Block> BlockBuilder<B> block(String name, Function<BlockBehaviour.Properties, B> factory) {
         return new BlockBuilder<>(name, factory);
     }
