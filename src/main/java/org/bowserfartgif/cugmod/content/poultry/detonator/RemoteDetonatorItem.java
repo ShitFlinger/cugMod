@@ -36,17 +36,14 @@ public class RemoteDetonatorItem extends Item {
         ItemCooldowns cooldowns = player.getCooldowns();
         if (cooldowns.isOnCooldown(this)) {
             return InteractionResultHolder.fail(stack);
-        } else {
+        } else if (!level.isClientSide()) {
             cooldowns.addCooldown(this, 10);
             this.tryDetonate(level, player);
-            return InteractionResultHolder.pass(stack);
         }
+        return InteractionResultHolder.pass(stack);
     }
     
     private void tryDetonate(Level level, Entity entity) {
-        if (level.isClientSide()) {
-            return;
-        }
         Map<BlockPos, SubLevel> birds = PoultryManager.getBirdsNear(
                 level,
                 JOMLConversion.toJOML(entity.getEyePosition(0.5f)),
