@@ -10,6 +10,7 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import org.bowserfartgif.cugmod.ext.poultry.LevelPoultryExtension;
 import org.joml.Vector3d;
 
 import java.util.Map;
@@ -17,13 +18,14 @@ import java.util.Set;
 
 public class PoultryManager {
     
-    public static final Set<BlockPos> birds = ObjectSets.synchronize(new ObjectOpenHashSet<>());
+    public final Set<BlockPos> birds = ObjectSets.synchronize(new ObjectOpenHashSet<>());
     
     public static final double BIAS = 0.5f;
     
     public static Map<BlockPos, SubLevel> getBirdsNear(Level level, Vector3d entityPos, Vector3d viewVector, double bias, float partialTick) {
         Map<BlockPos, SubLevel> birdsNear = new Object2ObjectArrayMap<>();
         Vector3d blockPos = new Vector3d();
+        Set<BlockPos> birds = ((LevelPoultryExtension) level).cugMod$getPoultryManager().birds;
         for (BlockPos bird : birds) {
             JOMLConversion.atCenterOf(bird, blockPos);
             SubLevel subLevel = Sable.HELPER.getContaining(level, bird);
@@ -51,6 +53,7 @@ public class PoultryManager {
     
     public static boolean hasBirdsNear(Level level, Vector3d entityPos, Vector3d viewVector, double bias, float partialTick) {
         Vector3d blockPos = new Vector3d();
+        Set<BlockPos> birds = ((LevelPoultryExtension) level).cugMod$getPoultryManager().birds;
         for (BlockPos bird : birds) {
             JOMLConversion.atCenterOf(bird, blockPos);
             SubLevel subLevel = Sable.HELPER.getContaining(level, bird);

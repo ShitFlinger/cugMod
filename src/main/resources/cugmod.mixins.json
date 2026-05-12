@@ -4,6 +4,8 @@
   "package": "org.bowserfartgif.cugmod.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "poultry.PoultryLevelChunkMixin",
+    "poultry.PoultryLevelMixin"
   ],
   "client": [
   ],

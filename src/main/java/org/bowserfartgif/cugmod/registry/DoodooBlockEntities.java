@@ -5,15 +5,10 @@ import foundry.veil.platform.registry.RegistryObject;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.DeferredHolder;
 
-import org.bowserfartgif.cugmod.Cugmod;
 import org.bowserfartgif.cugmod.content.control.wing.ControlSurfaceBlockEntity;
 import org.bowserfartgif.cugmod.content.control.wing.ControlSurfaceRenderer;
 import org.bowserfartgif.cugmod.content.poultry.PoultryBlockEntity;
@@ -23,11 +18,8 @@ import org.bowserfartgif.cugmod.content.poultry.splitting.SplittingPoultryBlockE
 import org.bowserfartgif.cugmod.content.propulsion.ThrusterBlockEntity;
 import org.bowserfartgif.cugmod.content.propulsion.ThrusterRenderer;
 import org.bowserfartgif.cugmod.content.swine.WretchedSwineBlockEntity;
-import org.bowserfartgif.cugmod.registry.util.BlockBuilder;
 import org.bowserfartgif.cugmod.registry.util.BlockEntityBuilder;
 import org.bowserfartgif.cugmod.registry.util.TriFunction;
-
-import java.util.function.Function;
 
 import static org.bowserfartgif.cugmod.Cugmod.MODID;
 

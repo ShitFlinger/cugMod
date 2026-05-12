@@ -109,14 +109,5 @@ public abstract class PoultryBlock extends Block implements EntityBlock, Equipab
         return DoodooBlockEntities.POULTRY.get().create(blockPos, blockState);
     }
     
-    @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof PoultryBlockEntity poultry) {
-            poultry.onRemove(level);
-        }
-        super.onRemove(state, level, pos, newState, movedByPiston);
-    }
-    
     public abstract void doSomething(Level level, BlockPos block, Entity entity, Vector3d blockPos, SubLevel subLevel);
 }
